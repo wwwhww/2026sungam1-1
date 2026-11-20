@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>우리 마음을 잇는 약속 - 스릴 만점 마음 오락실</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for 1st Graders -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        body {
+            font-family: 'Jua', sans-serif;
+            background: radial-gradient(circle at top, #FFF9DB 0%, #FFE3EC 45%, #E5DBFF 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #2b2338;
+        }
+        .font-body {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Arcade & Cartoon Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+        @keyframes bouncePop {
+            0% { transform: scale(0.75); opacity: 0; }
+            70% { transform: scale(1.06); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 71, 126, 0.65); }
+            50% { box-shadow: 0 0 0 14px rgba(255, 71, 126, 0); }
+        }
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-8px, 6px) rotate(-1.5deg); }
+            40% { transform: translate(8px, -6px) rotate(1.5deg); }
+            60% { transform: translate(-6px, -4px) rotate(-1deg); }
+            80% { transform: translate(6px, 4px) rotate(1deg); }
+        }
+        @keyframes feverRainbow {
+            0% { border-color: #ff4d6d; box-shadow: 0 0 25px #ff4d6d; }
+            25% { border-color: #ffd166; box-shadow: 0 0 25px #ffd166; }
+            50% { border-color: #06d6a0; box-shadow: 0 0 25px #06d6a0; }
+            75% { border-color: #118ab2; box-shadow: 0 0 25px #118ab2; }
+            100% { border-color: #9b5de5; box-shadow: 0 0 25px #9b5de5; }
+        }
+        @keyframes bossPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .animate-float { animation: floatSlow 3.2s ease-in-out infinite; }
+        .animate-pop { animation: bouncePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-glow { animation: pulseGlow 1.8s infinite; }
+        .animate-shake { animation: screenShake 0.35s ease-in-out; }
+        .fever-border { animation: feverRainbow 0.8s linear infinite !important; }
+        .animate-boss { animation: bossPulse 0.6s ease-in-out infinite; }
+
+        /* 3D Arcade Candy Buttons */
+        .btn-candy {
+            transition: transform 0.1s ease, border-bottom-width 0.1s ease, filter 0.15s ease;
+            border-bottom-width: 6px;
+        }
+        .btn-candy:hover {
+            filter: brightness(1.04);
+        }
+        .btn-candy:active {
+            transform: translateY(4px);
+            border-bottom-width: 2px;
+        }
+
+        /* Whack-a-mole Hole Style */
+        .mole-hole {
+            background: radial-gradient(ellipse at center, #3d2c2e 0%, #1f1617 75%);
+            box-shadow: inset 0 8px 12px rgba(0,0,0,0.6), 0 4px 0 #fff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #FFF5F5; }
+        ::-webkit-scrollbar-thumb { background: #FF85A1; border-radius: 9999px; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative">
+
+    <!-- Full-screen Confetti Canvas -->
+    <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 w-full h-full"></canvas>
+
+    <!-- Floating Decorative Clouds & Stars Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-65">
+        <div class="absolute top-10 left-6 text-5xl animate-float">☁️</div>
+        <div class="absolute top-16 right-10 text-5xl animate-float" style="animation-delay: 0.9s;">🌈</div>
+        <div class="absolute top-1/3 left-4 text-3xl animate-float" style="animation-delay: 1.5s;">⭐</div>
+        <div class="absolute bottom-14 left-10 text-4xl animate-float" style="animation-delay: 1.8s;">🌸</div>
+        <div class="absolute bottom-20 right-8 text-5xl animate-float" style="animation-delay: 0.4s;">🎈</div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b-4 border-pink-300 px-3 py-2 shadow-md">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Brand / Home Button -->
+            <button onclick="stopAllGames(); showScreen('home')" class="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-1.5 rounded-full border-pink-700 btn-candy shadow">
+                <span class="text-2xl">💖</span>
+                <span class="text-lg sm:text-xl tracking-wide">우리 마음을 잇는 약속</span>
+            </button>
+
+            <!-- 8 Heart Keys & Star Coins Progress -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center gap-1.5 bg-amber-50 border-2 border-amber-400 px-3 py-1 rounded-full shadow-inner">
+                    <span class="text-xs sm:text-sm text-amber-900">황금 열쇠:</span>
+                    <div id="header-keys" class="flex items-center gap-0.5 text-base sm:text-lg"></div>
+                    <span id="header-key-count" class="text-xs sm:text-sm bg-amber-300 text-amber-950 px-2 py-0.5 rounded-full ml-1">0/8</span>
+                </div>
+                <div class="flex items-center gap-1 bg-indigo-50 border-2 border-indigo-300 px-3 py-1 rounded-full text-indigo-900 text-sm sm:text-base">
+                    <span>🏆 최고점수:</span>
+                    <strong id="header-best-score" class="text-pink-600">0</strong>
+                </div>
+            </div>
+
+            <!-- Audio, BGM, TTS & Teacher Controls -->
+            <div class="flex items-center gap-1.5">
+                <button id="btn-bgm-toggle" onclick="toggleBGM()" class="bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy" title="신나는 오락실 배경음악">
+                    <i class="fa-solid fa-music"></i>
+                    <span id="bgm-label">BGM 켜짐</span>
+                </button>
+                <button id="btn-tts-toggle" onclick="toggleTTS()" class="bg-sky-100 hover:bg-sky-200 text-sky-800 border-sky-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy" title="목소리로 읽어주기">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span id="tts-label">읽어주기 켜짐</span>
+                </button>
+                <button id="btn-teacher" onclick="toggleTeacherMode()" class="bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy" title="선생님 프리패스 모드">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span id="teacher-label">선생님 프리패스</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-5 z-10 flex flex-col justify-center">
+
+        <!-- ==========================================
+             SCREEN 1: HOME / HUB SCREEN
+             ========================================== -->
+        <section id="screen-home" class="space-y-5 animate-pop">
+            <!-- Hero Banner -->
+            <div class="bg-white/95 rounded-3xl p-5 sm:p-7 border-4 border-pink-300 shadow-2xl text-center relative overflow-hidden">
+                <div class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-300 to-amber-300 text-amber-950 px-4 py-1 rounded-full text-sm sm:text-base mb-2 border-2 border-amber-400 shadow-sm">
+                    <span>✨ 1학년 2학기 마음교육 프로젝트</span>
+                    <span class="bg-white/80 px-2 py-0.5 rounded-full text-xs">8가지 마음 이야기 + 스릴 오락실 3종</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-rose-500 to-indigo-600 drop-shadow-sm mb-2">
+                    우리 마음을 잇는 약속 놀이터
+                </h1>
+                <p class="font-body text-base sm:text-xl text-gray-700 max-w-2xl mx-auto">
+                    친구의 마음을 이해하고 바른 행동을 고르면 <strong>황금 마음 열쇠🗝️</strong>를 얻어요!<br>
+                    열쇠를 모아 <strong>스릴 만점! 마음 오락실 게임</strong>에 도전해 보세요!
+                </p>
+
+                <!-- Expressive Mascots Trio Stage -->
+                <div class="my-4 flex justify-center items-center gap-3 sm:gap-8">
+                    <div class="w-20 h-20 sm:w-28 sm:h-28 animate-float" id="home-mascot-1"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="text-4xl sm:text-6xl animate-bounce">💖</div>
+                        <span class="text-xs sm:text-sm bg-pink-100 text-pink-700 px-3 py-0.5 rounded-full border-2 border-pink-300 mt-1 shadow-sm">
+                            배려 · 공감 · 약속
+                        </span>
+                    </div>
+                    <div class="w-20 h-20 sm:w-28 sm:h-28 animate-float" style="animation-delay: 0.6s;" id="home-mascot-2"></div>
+                </div>
+
+                <!-- Main CTA Buttons -->
+                <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mt-2">
+                    <button onclick="startNextUnfinishedScenario()" class="bg-gradient-to-b from-pink-400 to-rose-500 hover:from-pink-500 hover:to-rose-600 text-white border-rose-700 text-xl sm:text-2xl px-7 py-3.5 rounded-2xl btn-candy animate-glow flex items-center gap-2 shadow-xl">
+                        <span>🗝️</span>
+                        <span>마음 이야기 출발!</span>
+                    </button>
+                    <button onclick="openGameZone()" class="bg-gradient-to-b from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-orange-700 text-xl sm:text-2xl px-7 py-3.5 rounded-2xl btn-candy flex items-center gap-2 shadow-xl">
+                        <span>🕹️</span>
+                        <span>스릴 만점! 마음 오락실</span>
+                        <span id="game-badge" class="bg-white text-orange-600 text-sm px-2.5 py-0.5 rounded-full shadow">잠김🔒</span>
+                    </button>
+                    <button onclick="showScreen('pledge')" class="bg-gradient-to-b from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white border-teal-700 text-xl sm:text-2xl px-6 py-3.5 rounded-2xl btn-candy flex items-center gap-2 shadow-xl">
+                        <span>🏅</span>
+                        <span>우리 반 약속 카드</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 8 Scenarios Adventure Map -->
+            <div class="bg-white/95 rounded-3xl p-5 sm:p-6 border-4 border-amber-300 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h2 class="text-2xl sm:text-3xl text-amber-950 flex items-center gap-2">
+                        <span>🗺️</span>
+                        <span>8가지 마음 이야기 카드 (갈등 해결 & 친구 마음 이해하기)</span>
+                    </h2>
+                    <span class="text-xs sm:text-sm bg-gradient-to-r from-amber-100 to-yellow-200 text-amber-900 px-3.5 py-1 rounded-full border border-amber-300">
+                        💡 카드를 골라 해결할 때마다 황금 열쇠🗝️와 오락실 게임이 열려요!
+                    </span>
+                </div>
+
+                <!-- 8-Card Grid -->
+                <div id="scenario-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 2: CONFLICT / EMPATHY SCENARIO STAGE
+             ========================================== -->
+        <section id="screen-scenario" class="hidden space-y-4 animate-pop">
+            <div id="scenario-box" class="bg-white rounded-3xl p-5 sm:p-7 border-4 border-sky-300 shadow-2xl relative">
+                <!-- Scenario Header -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <span id="sc-badge" class="bg-gradient-to-r from-sky-500 to-indigo-500 text-white px-4 py-1 rounded-full text-lg shadow">상황 1</span>
+                        <span id="sc-category" class="bg-amber-100 text-amber-800 border border-amber-300 px-3 py-0.5 rounded-full text-sm">갈등 해결</span>
+                        <h2 id="sc-title" class="text-2xl sm:text-3xl text-sky-950">블록 성이 무너졌어요!</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="speakCurrentScenario()" class="bg-yellow-300 hover:bg-yellow-400 text-amber-950 border-yellow-500 px-4 py-1.5 rounded-full text-base sm:text-lg btn-candy flex items-center gap-1.5">
+                            <i class="fa-solid fa-ear-listen"></i>
+                            <span>소리 듣기</span>
+                        </button>
+                        <button onclick="showScreen('home')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 px-3.5 py-1.5 rounded-full text-base btn-candy">
+                            목록으로
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Expressive Dual-Character Stage -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center bg-gradient-to-b from-sky-50 via-indigo-50/60 to-pink-50/60 rounded-3xl p-4 sm:p-6 border-2 border-sky-200 mb-5 shadow-inner">
+                    
+                    <!-- Left: Animated Dual Characters & Situation Icon -->
+                    <div class="lg:col-span-5 flex flex-col items-center">
+                        <div class="w-full bg-white rounded-3xl border-4 border-sky-200 shadow-md p-4 flex items-center justify-around relative overflow-hidden">
+                            <!-- Character 1 (Me) -->
+                            <div class="flex flex-col items-center z-10">
+                                <div id="sc-char1-svg" class="w-24 h-24 sm:w-28 sm:h-28"></div>
+                                <span id="sc-char1-name" class="text-xs sm:text-sm bg-rose-100 text-rose-800 px-2.5 py-0.5 rounded-full border border-rose-300 mt-1">나 (루루)</span>
+                            </div>
+
+                            <!-- Center Prop / Situation Badge -->
+                            <div class="flex flex-col items-center justify-center px-1">
+                                <div id="sc-center-prop" class="text-4xl sm:text-5xl animate-bounce">🏰💥</div>
+                                <span class="text-xs text-gray-400 mt-1">⚡ 상황 발생!</span>
+                            </div>
+
+                            <!-- Character 2 (Friend) -->
+                            <div class="flex flex-col items-center z-10">
+                                <div id="sc-char2-svg" class="w-24 h-24 sm:w-28 sm:h-28"></div>
+                                <span id="sc-char2-name" class="text-xs sm:text-sm bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full border border-amber-300 mt-1">친구 (포포)</span>
+                            </div>
+                        </div>
+
+                        <!-- Heart Thermometers -->
+                        <div class="grid grid-cols-2 gap-2.5 w-full mt-3">
+                            <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-2 text-center">
+                                <div class="text-xs text-rose-600">내 마음 온도계</div>
+                                <div id="sc-my-feeling" class="text-sm sm:text-base text-rose-900 mt-0.5">화가 불끈! 😡</div>
+                            </div>
+                            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-2 text-center">
+                                <div class="text-xs text-amber-700">친구 마음 돋보기</div>
+                                <div id="sc-friend-feeling" class="text-sm sm:text-base text-amber-900 mt-0.5">앗, 실수! 미안 💦</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Story Text & Thought Bubble -->
+                    <div class="lg:col-span-7 space-y-3 text-left">
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border-2 border-sky-200 shadow-sm relative">
+                            <div class="text-xs text-sky-600 mb-1 flex items-center gap-1">
+                                <i class="fa-solid fa-book-open"></i>
+                                <span>어떤 일이 일어났을까요?</span>
+                            </div>
+                            <p id="sc-desc" class="font-body text-xl sm:text-2xl leading-relaxed text-gray-800"></p>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-50 to-yellow-100 border-2 border-amber-300 rounded-2xl p-3.5 flex items-center gap-3 shadow-sm">
+                            <div class="text-3xl sm:text-4xl shrink-0">🔍</div>
+                            <div>
+                                <div class="text-xs text-amber-800">친구의 속마음 힌트</div>
+                                <p id="sc-hint" class="text-base sm:text-lg text-amber-950"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Action Choices -->
+                <div class="space-y-3">
+                    <h3 class="text-xl sm:text-2xl text-center text-indigo-950">
+                        👇 우리 마음을 이어주는 <strong>가장 바르고 따뜻한 행동</strong>을 골라 터치해 보세요!
+                    </h3>
+                    <div id="sc-choices" class="grid grid-cols-1 gap-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             MODAL: CONSEQUENCE & EMPATHY FEEDBACK
+             ========================================== -->
+        <div id="modal-feedback" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-40 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 border-4 shadow-2xl text-center animate-pop relative" id="feedback-card">
+                <!-- Animated Character Faces After Choice -->
+                <div class="flex items-center justify-center gap-4 mb-3">
+                    <div id="fb-char1" class="w-20 h-20 sm:w-24 sm:h-24"></div>
+                    <div id="fb-bridge-icon" class="text-5xl animate-bounce">💖</div>
+                    <div id="fb-char2" class="w-20 h-20 sm:w-24 sm:h-24"></div>
+                </div>
+
+                <h3 id="fb-title" class="text-2xl sm:text-4xl mb-2"></h3>
+
+                <div class="bg-slate-50 rounded-2xl p-4 border-2 border-slate-200 mb-4">
+                    <p id="fb-text" class="font-body text-lg sm:text-xl text-gray-800 leading-relaxed"></p>
+                    <div id="fb-heart-result" class="mt-3 text-sm sm:text-base font-bold py-1.5 px-4 rounded-full inline-block"></div>
+                </div>
+
+                <div id="fb-actions" class="flex flex-wrap justify-center gap-3 mt-3"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SCREEN 3: THRILLING ARCADE GAME ZONE (3 ACTION GAMES)
+             ========================================== -->
+        <section id="screen-games" class="hidden space-y-4 animate-pop">
+            <div class="bg-white/95 rounded-3xl p-4 sm:p-6 border-4 border-orange-400 shadow-2xl">
+                <!-- Arcade Header -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <div>
+                        <span class="bg-gradient-to-r from-rose-500 to-orange-500 text-white px-3 py-0.5 rounded-full text-xs sm:text-sm shadow">
+                            ⚡ ACTION ARCADE ZONE ⚡
+                        </span>
+                        <h2 class="text-2xl sm:text-4xl text-orange-600 flex items-center gap-2 mt-1">
+                            <span>🕹️</span>
+                            <span>스릴 만점! 마음 오락실</span>
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="stopAllGames(); startNextUnfinishedScenario()" class="bg-pink-100 hover:bg-pink-200 text-pink-700 border-pink-300 px-3.5 py-2 rounded-2xl text-sm sm:text-base btn-candy">
+                            🗝️ 열쇠 더 모으기
+                        </button>
+                        <button onclick="stopAllGames(); showScreen('home')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 px-4 py-2 rounded-2xl text-sm sm:text-base btn-candy">
+                            🏠 처음으로
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3 Thrilling Game Tabs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <!-- Game 1 Tab: Whack-a-Bad-Behavior -->
+                    <button onclick="selectArcadeGame(1)" id="tab-game-1" class="p-3.5 rounded-2xl border-4 text-left flex items-center gap-3 btn-candy bg-rose-50 border-rose-300">
+                        <div class="text-4xl bg-white p-2.5 rounded-2xl shadow">🔨</div>
+                        <div>
+                            <div class="text-xs bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full inline-block mb-0.5" id="lock-game-1">열쇠 1개 필요</div>
+                            <div class="text-lg sm:text-xl text-rose-950 leading-tight">1. 나쁜 행동 뿅망치 대소동!</div>
+                            <div class="font-body text-xs text-gray-600">장난꾸러기만 빠르게 터치! 보스 출현!</div>
+                        </div>
+                    </button>
+
+                    <!-- Game 2 Tab: Thrilling Dodge & Dash Runner -->
+                    <button onclick="selectArcadeGame(2)" id="tab-game-2" class="p-3.5 rounded-2xl border-4 text-left flex items-center gap-3 btn-candy bg-sky-50 border-sky-300">
+                        <div class="text-4xl bg-white p-2.5 rounded-2xl shadow">🚀</div>
+                        <div>
+                            <div class="text-xs bg-sky-200 text-sky-900 px-2 py-0.5 rounded-full inline-block mb-0.5" id="lock-game-2">열쇠 2개 필요</div>
+                            <div class="text-lg sm:text-xl text-sky-950 leading-tight">2. 아슬아슬! 불꽃 피하기 질주</div>
+                            <div class="font-body text-xs text-gray-600">화남 불꽃·번개 피하고 하트 먹기!</div>
+                        </div>
+                    </button>
+
+                    <!-- Game 3 Tab: Storm Cloud Shooting Defense -->
+                    <button onclick="selectArcadeGame(3)" id="tab-game-3" class="p-3.5 rounded-2xl border-4 text-left flex items-center gap-3 btn-candy bg-purple-50 border-purple-300">
+                        <div class="text-4xl bg-white p-2.5 rounded-2xl shadow">🎯</div>
+                        <div>
+                            <div class="text-xs bg-purple-200 text-purple-900 px-2 py-0.5 rounded-full inline-block mb-0.5" id="lock-game-3">열쇠 3개 필요</div>
+                            <div class="text-lg sm:text-xl text-purple-950 leading-tight">3. 팡팡! 먹구름 슈팅 디펜스</div>
+                            <div class="font-body text-xs text-gray-600">몰려오는 심술 먹구름 군단을 막아라!</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Active Arcade Cabinet Container -->
+                <div id="arcade-cabinet" class="bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-4 sm:p-5 border-4 border-indigo-400 shadow-2xl relative overflow-hidden">
+                    
+                    <!-- Top Arcade HUD Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/20 mb-3 text-white">
+                        <div class="flex items-center gap-2">
+                            <span id="hud-game-title" class="text-lg sm:text-2xl text-yellow-300">🔨 나쁜 행동 뿅망치 대소동!</span>
+                            <span id="hud-fever-badge" class="hidden bg-gradient-to-r from-pink-500 via-yellow-400 to-emerald-400 text-slate-950 text-xs sm:text-sm px-3 py-0.5 rounded-full animate-bounce">
+                                🔥 FEVER 2배 점수!
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-sm sm:text-lg">
+                            <div id="hud-hp-box" class="bg-rose-500/30 border border-rose-400 px-3 py-0.5 rounded-full text-rose-200">
+                                ❤️ 생명: <span id="hud-hp">❤️❤️❤️</span>
+                            </div>
+                            <div class="bg-amber-400/20 border border-amber-300 px-3 py-0.5 rounded-full text-amber-300">
+                                ⚡ 콤보: <span id="hud-combo">0</span>
+                            </div>
+                            <div class="bg-emerald-400/20 border border-emerald-300 px-3.5 py-0.5 rounded-full text-emerald-300">
+                                ⭐ 점수: <span id="hud-score">0</span>
+                            </div>
+                            <div class="bg-sky-400/20 border border-sky-300 px-3.5 py-0.5 rounded-full text-sky-200">
+                                ⏰ 시간: <span id="hud-timer">35</span>초
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- =====================================
+                         GAME 1 STAGE: 3x3 WHACK-A-BAD-BEHAVIOR
+                         ===================================== -->
+                    <div id="stage-game-1" class="relative w-full min-h-[380px] sm:min-h-[420px] bg-gradient-to-b from-emerald-200 via-lime-100 to-amber-100 rounded-2xl p-3 sm:p-5 border-4 border-amber-300 flex flex-col justify-between overflow-hidden">
+                        
+                        <!-- Boss Alert Banner -->
+                        <div id="whack-boss-banner" class="hidden bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white px-4 py-2 rounded-2xl border-2 border-yellow-300 shadow-lg mb-2 flex items-center justify-between animate-boss z-20">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl sm:text-3xl">👾</span>
+                                <div>
+                                    <div class="text-sm sm:text-lg leading-none">🚨 대왕 심술 먹구름 보스 출현!!</div>
+                                    <div class="font-body text-xs text-yellow-200">가운데 보스를 빠르게 연타해서 물리치세요!</div>
+                                </div>
+                            </div>
+                            <div class="w-32 sm:w-44 bg-black/40 h-5 rounded-full overflow-hidden border border-white p-0.5">
+                                <div id="whack-boss-hp-bar" class="bg-gradient-to-r from-yellow-300 to-red-500 h-full rounded-full transition-all" style="width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- 3x3 Holes Grid -->
+                        <div id="whack-grid" class="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-xl w-full mx-auto my-auto flex-1 items-center">
+                            <!-- 9 Holes generated by JS -->
+                        </div>
+
+                        <!-- Helper Tip Footer -->
+                        <div class="text-center mt-2">
+                            <span class="inline-block bg-white/90 text-gray-800 text-xs sm:text-sm px-4 py-1 rounded-full border border-amber-400 shadow-sm">
+                                🔨 <strong>나쁜 행동(새치기·놀리기·밀치기)</strong>은 팡팡 터치! 😇 <strong>착한 친구</strong>는 치면 안 돼요!
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- =====================================
+                         GAME 2 & 3 STAGE: ACTION CANVAS
+                         ===================================== -->
+                    <div id="stage-canvas-wrap" class="hidden relative w-full h-[380px] sm:h-[420px] rounded-2xl overflow-hidden border-4 border-sky-300 shadow-inner bg-slate-900">
+                        <canvas id="arcade-canvas" class="w-full h-full block touch-none"></canvas>
+                    </div>
+
+                    <!-- Game 2 Controls (3-Lane / Left-Right Dash Buttons) -->
+                    <div id="controls-game-2" class="hidden mt-3 flex flex-wrap justify-center items-center gap-3 sm:gap-6">
+                        <button onpointerdown="moveRunnerLane(-1)" class="bg-gradient-to-b from-sky-400 to-blue-600 active:from-sky-500 active:to-blue-700 text-white border-blue-800 px-7 py-3 rounded-2xl text-xl sm:text-2xl btn-candy shadow-lg">
+                            ◀ 왼쪽 피하기!
+                        </button>
+                        <div class="text-center text-white/90 text-xs sm:text-sm font-body">
+                            화면을 직접 터치·드래그하거나 버튼으로 ⚡번개·🔥불꽃을 피하세요!
+                        </div>
+                        <button onpointerdown="moveRunnerLane(1)" class="bg-gradient-to-b from-pink-400 to-rose-600 active:from-pink-500 active:to-rose-700 text-white border-rose-800 px-7 py-3 rounded-2xl text-xl sm:text-2xl btn-candy shadow-lg">
+                            오른쪽 피하기! ▶
+                        </button>
+                    </div>
+
+                    <!-- Game 3 Controls (Special Defense Skills for Kids) -->
+                    <div id="controls-game-3" class="hidden mt-3 flex flex-wrap justify-center items-center gap-3 sm:gap-5">
+                        <button id="btn-skill-bomb" onclick="useDefenseBombSkill()" class="bg-gradient-to-b from-amber-400 to-orange-500 text-white border-orange-700 px-5 py-2.5 rounded-2xl text-lg sm:text-xl btn-candy shadow-lg flex items-center gap-2">
+                            <span>🌈 무지개 사과 폭탄!</span>
+                            <span id="bomb-count-badge" class="bg-white text-orange-700 text-sm px-2 py-0.5 rounded-full">2회</span>
+                        </button>
+                        <span class="text-white/80 text-xs sm:text-sm font-body hidden sm:inline">
+                            먹구름을 직접 터치해서 하트 레이저를 쏘세요!
+                        </span>
+                        <button id="btn-skill-freeze" onclick="useDefenseFreezeSkill()" class="bg-gradient-to-b from-cyan-400 to-sky-600 text-white border-sky-800 px-5 py-2.5 rounded-2xl text-lg sm:text-xl btn-candy shadow-lg flex items-center gap-2">
+                            <span>❄️ 잠깐만! 멈춤 시계</span>
+                            <span id="freeze-count-badge" class="bg-white text-sky-800 text-sm px-2 py-0.5 rounded-full">2회</span>
+                        </button>
+                    </div>
+
+                    <!-- Universal Start / Game Over Overlay inside Arcade Cabinet -->
+                    <div id="arcade-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-6 text-center text-white">
+                        <div id="overlay-icon" class="text-6xl sm:text-7xl mb-2 animate-bounce">🔨</div>
+                        <div id="overlay-rank" class="hidden bg-yellow-300 text-amber-950 px-4 py-1 rounded-full text-sm sm:text-base mb-2 font-bold shadow">
+                            👑 최고 등급 달성!
+                        </div>
+                        <h3 id="overlay-title" class="text-3xl sm:text-5xl text-yellow-300 mb-2 drop-shadow">
+                            나쁜 행동 뿅망치 대소동!
+                        </h3>
+                        <p id="overlay-desc" class="font-body text-base sm:text-xl max-w-lg mb-6 text-slate-200 leading-relaxed"></p>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <button onclick="startCurrentArcadeGame()" class="bg-gradient-to-b from-yellow-300 via-amber-400 to-orange-500 text-amber-950 border-orange-700 text-2xl sm:text-3xl px-9 py-4 rounded-2xl btn-candy animate-glow shadow-2xl">
+                                🚀 게임 스타트!
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 4: PROMISE PLEDGE STUDIO
+             ========================================== -->
+        <section id="screen-pledge" class="hidden space-y-5 animate-pop">
+            <div class="bg-white/95 rounded-3xl p-5 sm:p-7 border-4 border-emerald-300 shadow-2xl">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h2 class="text-2xl sm:text-4xl text-emerald-700 flex items-center gap-2">
+                        <span>🏅</span>
+                        <span>우리 마음을 잇는 약속 다짐 카드</span>
+                    </h2>
+                    <button onclick="showScreen('home')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 px-4 py-2 rounded-2xl text-lg btn-candy">
+                        🏠 처음으로
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <!-- Left: Builder Controls -->
+                    <div class="md:col-span-6 space-y-4 bg-emerald-50/70 p-5 rounded-2xl border-2 border-emerald-200">
+                        <div>
+                            <label class="block text-lg text-emerald-900 mb-1">1. 내 이름을 적어보세요</label>
+                            <input id="pledge-name" type="text" placeholder="예: 1학년 1반 김마음" maxlength="14" oninput="updatePledgePreview()" class="w-full px-4 py-3 rounded-xl border-2 border-emerald-300 text-xl focus:outline-none focus:border-emerald-500 bg-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-lg text-emerald-900 mb-1">2. 나의 동물 친구 캐릭터를 골라보세요</label>
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                                <button onclick="selectAvatar('bunny', '배려 토끼 루루')" class="p-2 bg-white rounded-xl border-2 border-emerald-400 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🐰</span><span class="text-xs mt-0.5">루루</span>
+                                </button>
+                                <button onclick="selectAvatar('bear', '든든 곰돌이 포포')" class="p-2 bg-white rounded-xl border-2 border-emerald-200 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🐻</span><span class="text-xs mt-0.5">포포</span>
+                                </button>
+                                <button onclick="selectAvatar('dog', '다정 강아지 뭉치')" class="p-2 bg-white rounded-xl border-2 border-emerald-200 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🐶</span><span class="text-xs mt-0.5">뭉치</span>
+                                </button>
+                                <button onclick="selectAvatar('cat', '경청 고양이 나비')" class="p-2 bg-white rounded-xl border-2 border-emerald-200 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🐱</span><span class="text-xs mt-0.5">나비</span>
+                                </button>
+                                <button onclick="selectAvatar('squirrel', '양보 다람쥐 토리')" class="p-2 bg-white rounded-xl border-2 border-emerald-200 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🐿️</span><span class="text-xs mt-0.5">토리</span>
+                                </button>
+                                <button onclick="selectAvatar('lion', '용기 사자 레오')" class="p-2 bg-white rounded-xl border-2 border-emerald-200 hover:scale-105 transition flex flex-col items-center">
+                                    <span class="text-2xl">🦁</span><span class="text-xs mt-0.5">레오</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-lg text-emerald-900 mb-1">3. 내가 꼭 지킬 약속을 골라보세요</label>
+                            <div class="space-y-2">
+                                <button onclick="selectPromise('친구에게 별명 대신 예쁜 이름을 다정하게 불러줄게요!')" class="w-full text-left px-4 py-2 rounded-xl bg-white border-2 border-emerald-400 text-base hover:bg-emerald-100 transition">
+                                    💖 친구에게 별명 대신 예쁜 이름을 다정하게 불러줄게요!
+                                </button>
+                                <button onclick="selectPromise('화가 나도 심호흡하고 내 마음을 바른 말로 말할게요!')" class="w-full text-left px-4 py-2 rounded-xl bg-white border-2 border-emerald-200 text-base hover:bg-emerald-100 transition">
+                                    🌱 화가 나도 심호흡하고 내 마음을 바른 말로 말할게요!
+                                </button>
+                                <button onclick="selectPromise('혼자 있는 친구에게 먼저 다가가 같이 놀자고 손 내밀게요!')" class="w-full text-left px-4 py-2 rounded-xl bg-white border-2 border-emerald-200 text-base hover:bg-emerald-100 transition">
+                                    🤗 혼자 있는 친구에게 먼저 다가가 같이 놀자고 손 내밀게요!
+                                </button>
+                                <button onclick="selectPromise('실수한 친구를 놀리지 않고 따뜻하게 도와줄게요!')" class="w-full text-left px-4 py-2 rounded-xl bg-white border-2 border-emerald-200 text-base hover:bg-emerald-100 transition">
+                                    🌷 실수한 친구를 놀리지 않고 따뜻하게 도와줄게요!
+                                </button>
+                            </div>
+                        </div>
+
+                        <button onclick="celebratePledge()" class="w-full bg-gradient-to-b from-emerald-400 to-teal-500 text-white border-teal-700 text-2xl py-3.5 rounded-2xl btn-candy shadow-xl">
+                            🎉 약속 도장 쾅! 찍기 (축하 폭죽!)
+                        </button>
+                    </div>
+
+                    <!-- Right: Certificate Preview Card -->
+                    <div class="md:col-span-6">
+                        <div id="certificate-card" class="bg-gradient-to-br from-yellow-50 via-white to-pink-50 rounded-3xl p-6 sm:p-8 border-8 border-double border-amber-400 shadow-2xl text-center relative overflow-hidden">
+                            <div class="text-xs sm:text-sm bg-amber-300 text-amber-950 px-4 py-1 rounded-full inline-block mb-2 shadow-sm">
+                                ★ 우리 마음을 잇는 약속 어린이 증서 ★
+                            </div>
+                            <div id="cert-avatar-svg" class="w-28 h-28 mx-auto my-2 animate-float"></div>
+                            <div id="cert-title" class="text-lg text-pink-600 mb-0.5">배려 토끼 루루 어린이</div>
+                            <div id="cert-name" class="text-3xl sm:text-4xl text-gray-900 underline decoration-wavy decoration-pink-400 underline-offset-8 mb-4">
+                                1학년 멋진 친구
+                            </div>
+                            <div class="bg-white/95 rounded-2xl p-4 border-2 border-pink-200 shadow-inner mb-4">
+                                <p class="text-xs text-gray-500 mb-1">나의 따뜻한 약속 다짐</p>
+                                <p id="cert-promise" class="font-body text-xl sm:text-2xl text-indigo-950 leading-snug">
+                                    "친구에게 별명 대신 예쁜 이름을 다정하게 불러줄게요!"
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-gray-700 px-2">
+                                <span class="bg-amber-100 px-3 py-1 rounded-full border border-amber-300">모은 황금 열쇠: <strong id="cert-keys">🗝️ 0/8</strong></span>
+                                <span class="bg-indigo-100 px-3 py-1 rounded-full border border-indigo-300">오락실 최고점: <strong id="cert-score">0점</strong></span>
+                                <span class="bg-rose-500 text-white px-3 py-1 rounded-full rotate-[-6deg] shadow text-sm">
+                                    참 잘했어요 💮
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-3 text-xs sm:text-sm text-gray-600 z-10">
+        1학년 2학기 마음교육 프로젝트 『우리 마음을 잇는 약속』 디지털 상호작용형 갈등 해결 & 스릴 액션 오락실
+    </footer>
+
+    <!-- ==========================================
+         JAVASCRIPT ENGINE (EXPRESSIVE SVG, SYNTH AUDIO, 8 SCENARIOS, 3 THRILL GAMES)
+         ========================================== -->
+    <script>
+        /* --------------------------------------------------
+           1. EXPRESSIVE CUSTOM SVG CHARACTER GENERATOR
+              species: 'bunny' | 'bear' | 'dog' | 'cat' | 'squirrel' | 'lion'
+              mood: 'happy' | 'angry' | 'sad' | 'surprised' | 'shy'
+        -------------------------------------------------- */
+        function createCharacterSVG(species = 'bunny', mood = 'happy') {
+            const palettes = {
+                bunny: { main: '#FFFFFF', stroke: '#FF758F', earIn: '#FFB3C1', cheek: '#FF8FA3', muzzle: '#FFF0F3' },
+                bear: { main: '#FFD166', stroke: '#D97706', earIn: '#FEF3C7', cheek: '#F59E0B', muzzle: '#FFFBEB' },
+                dog: { main: '#FDE68A', stroke: '#B45309', earIn: '#92400E', cheek: '#F87171', muzzle: '#FFFFFF' },
+                cat: { main: '#E9D5FF', stroke: '#7E22CE', earIn: '#F472B6', cheek: '#F472B6', muzzle: '#FAF5FF' },
+                squirrel: { main: '#FDBA74', stroke: '#C2410C', earIn: '#FFEDD5', cheek: '#FB7185', muzzle: '#FFF7ED' },
+                lion: { main: '#FCD34D', stroke: '#B45309', earIn: '#F59E0B', cheek: '#EF4444', muzzle: '#FEF3C7' }
+            };
+            const p = palettes[species] || palettes.bunny;
+
+            // Ears by species
+            let earsSVG = '';
+            if (species === 'bunny') {
+                earsSVG = `
+                    <ellipse cx="40" cy="24" rx="11" ry="23" fill="${p.main}" stroke="${p.stroke}" stroke-width="4" transform="rotate(-10 40 24)"/>
+                    <ellipse cx="40" cy="24" rx="5.5" ry="15" fill="${p.earIn}" transform="rotate(-10 40 24)"/>
+                    <ellipse cx="80" cy="24" rx="11" ry="23" fill="${p.main}" stroke="${p.stroke}" stroke-width="4" transform="rotate(10 80 24)"/>
+                    <ellipse cx="80" cy="24" rx="5.5" ry="15" fill="${p.earIn}" transform="rotate(10 80 24)"/>
+                `;
+            } else if (species === 'cat') {
+                earsSVG = `
+                    <polygon points="24,52 30,16 55,36" fill="${p.main}" stroke="${p.stroke}" stroke-width="4" stroke-linejoin="round"/>
+                    <polygon points="30,46 33,24 49,37" fill="${p.earIn}"/>
+                    <polygon points="96,52 90,16 65,36" fill="${p.main}" stroke="${p.stroke}" stroke-width="4" stroke-linejoin="round"/>
+                    <polygon points="90,46 87,24 71,37" fill="${p.earIn}"/>
+                `;
+            } else if (species === 'dog') {
+                earsSVG = `
+                    <ellipse cx="23" cy="64" rx="11" ry="22" fill="${p.earIn}" stroke="${p.stroke}" stroke-width="3.5" transform="rotate(15 23 64)"/>
+                    <ellipse cx="97" cy="64" rx="11" ry="22" fill="${p.earIn}" stroke="${p.stroke}" stroke-width="3.5" transform="rotate(-15 97 64)"/>
+                `;
+            } else if (species === 'lion') {
+                earsSVG = `
+                    <circle cx="60" cy="70" r="46" fill="#EA580C" stroke="#9A3412" stroke-width="4" stroke-dasharray="14 6"/>
+                    <circle cx="32" cy="38" r="12" fill="${p.main}" stroke="${p.stroke}" stroke-width="3.5"/>
+                    <circle cx="88" cy="38" r="12" fill="${p.main}" stroke="${p.stroke}" stroke-width="3.5"/>
+                `;
+            } else {
+                // bear & squirrel
+                earsSVG = `
+                    <circle cx="32" cy="38" r="14" fill="${p.main}" stroke="${p.stroke}" stroke-width="4"/>
+                    <circle cx="32" cy="38" r="7" fill="${p.earIn}"/>
+                    <circle cx="88" cy="38" r="14" fill="${p.main}" stroke="${p.stroke}" stroke-width="4"/>
+                    <circle cx="88" cy="38" r="7" fill="${p.earIn}"/>
+                `;
+            }
+
+            // Eyes, Brows, Mouth & Effects by Mood
+            let faceSVG = '';
+            let extraFX = '';
+
+            if (mood === 'happy') {
+                faceSVG = `
+                    <path d="M 38 64 Q 45 55 52 64" fill="none" stroke="#2b2338" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M 68 64 Q 75 55 82 64" fill="none" stroke="#2b2338" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M 50 79 Q 60 90 70 79" fill="#FF4D6D" stroke="#2b2338" stroke-width="3.5" stroke-linecap="round"/>
+                `;
+                extraFX = `<text x="88" y="30" font-size="22">💖</text>`;
+            } else if (mood === 'angry') {
+                faceSVG = `
+                    <line x1="36" y1="53" x2="52" y2="60" stroke="#991B1B" stroke-width="4.5" stroke-linecap="round"/>
+                    <line x1="84" y1="53" x2="68" y2="60" stroke="#991B1B" stroke-width="4.5" stroke-linecap="round"/>
+                    <circle cx="45" cy="65" r="5" fill="#2b2338"/>
+                    <circle cx="75" cy="65" r="5" fill="#2b2338"/>
+                    <path d="M 50 85 Q 60 76 70 85" fill="none" stroke="#991B1B" stroke-width="4" stroke-linecap="round"/>
+                `;
+                extraFX = `<text x="86" y="28" font-size="22">💢</text>`;
+            } else if (mood === 'sad') {
+                faceSVG = `
+                    <line x1="36" y1="60" x2="50" y2="54" stroke="#1E3A8A" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="84" y1="60" x2="70" y2="54" stroke="#1E3A8A" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="45" cy="65" r="5" fill="#2b2338"/>
+                    <circle cx="75" cy="65" r="5" fill="#2b2338"/>
+                    <ellipse cx="38" cy="76" rx="3.5" ry="7" fill="#38BDF8"/>
+                    <ellipse cx="82" cy="76" rx="3.5" ry="7" fill="#38BDF8"/>
+                    <path d="M 51 85 Q 60 78 69 85" fill="none" stroke="#2b2338" stroke-width="3.5" stroke-linecap="round"/>
+                `;
+                extraFX = `<text x="88" y="30" font-size="20">💧</text>`;
+            } else if (mood === 'surprised') {
+                faceSVG = `
+                    <circle cx="45" cy="63" r="6" fill="#2b2338"/>
+                    <circle cx="75" cy="63" r="6" fill="#2b2338"/>
+                    <circle cx="43" cy="61" r="2" fill="#FFF"/>
+                    <circle cx="73" cy="61" r="2" fill="#FFF"/>
+                    <circle cx="60" cy="83" r="6.5" fill="#FF4D6D" stroke="#2b2338" stroke-width="3"/>
+                `;
+                extraFX = `<text x="88" y="30" font-size="22">💦</text>`;
+            } else {
+                // shy / lonely
+                faceSVG = `
+                    <circle cx="45" cy="64" r="5" fill="#2b2338"/>
+                    <circle cx="75" cy="64" r="5" fill="#2b2338"/>
+                    <circle cx="43" cy="62" r="2" fill="#FFF"/>
+                    <circle cx="73" cy="62" r="2" fill="#FFF"/>
+                    <path d="M 53 82 Q 60 85 67 82" fill="none" stroke="#2b2338" stroke-width="3.5" stroke-linecap="round"/>
+                `;
+                extraFX = `<text x="88" y="30" font-size="20">🌱</text>`;
+            }
+
+            return `
+            <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow">
+                ${earsSVG}
+                <circle cx="60" cy="70" r="36" fill="${p.main}" stroke="${p.stroke}" stroke-width="4"/>
+                <ellipse cx="60" cy="77" rx="14" ry="10" fill="${p.muzzle}"/>
+                <ellipse cx="35" cy="73" rx="6.5" ry="4" fill="${p.cheek}" opacity="0.75"/>
+                <ellipse cx="85" cy="73" rx="6.5" ry="4" fill="${p.cheek}" opacity="0.75"/>
+                <ellipse cx="60" cy="72" rx="4.5" ry="3.2" fill="#3b2820"/>
+                ${faceSVG}
+                ${extraFX}
+            </svg>`;
+        }
+
+        /* --------------------------------------------------
+           2. CONFETTI CELEBRATION ENGINE
+        -------------------------------------------------- */
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiPieces = [];
+        let confettiAnimId = null;
+
+        function launchConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            const colors = ['#FF4D6D', '#FFD166', '#06D6A0', '#118AB2', '#9B5DE5', '#FF9F1C'];
+            for (let i = 0; i < 85; i++) {
+                confettiPieces.push({
+                    x: window.innerWidth / 2 + (Math.random() - 0.5) * 260,
+                    y: window.innerHeight / 2 - 60,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: -Math.random() * 14 - 4,
+                    size: 8 + Math.random() * 8,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rot: Math.random() * 360,
+                    vRot: (Math.random() - 0.5) * 12,
+                    life: 90 + Math.random() * 40
+                });
+            }
+            if (!confettiAnimId) animateConfetti();
+        }
+
+        function animateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            for (let i = confettiPieces.length - 1; i >= 0; i--) {
+                const p = confettiPieces[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.38; // gravity
+                p.rot += p.vRot;
+                p.life--;
+
+                confettiCtx.save();
+                confettiCtx.translate(p.x, p.y);
+                confettiCtx.rotate((p.rot * Math.PI) / 180);
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+                confettiCtx.restore();
+
+                if (p.life <= 0 || p.y > confettiCanvas.height + 30) {
+                    confettiPieces.splice(i, 1);
+                }
+            }
+            if (confettiPieces.length > 0) {
+                confettiAnimId = requestAnimationFrame(animateConfetti);
+            } else {
+                confettiAnimId = null;
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        /* --------------------------------------------------
+           3. EXCITING WEB AUDIO SYNTHESIZER & BGM LOOP
+        -------------------------------------------------- */
+        let audioCtx = null;
+        let bgmEnabled = true;
+        let bgmInterval = null;
+        let bgmStep = 0;
+
+        function ensureAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type, combo = 1) {
+            try {
+                ensureAudio();
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(580, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.07);
+                    gain.gain.setValueAtTime(0.16, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.07);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.07);
+                } else if (type === 'whack') {
+                    // Pitch rises with combo!
+                    const baseFreq = Math.min(360 + combo * 35, 1100);
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(baseFreq, now);
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.8, now + 0.11);
+                    gain.gain.setValueAtTime(0.28, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.11);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.11);
+                } else if (type === 'laser') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(920, now);
+                    osc.frequency.exponentialRampToValueAtTime(260, now + 0.12);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.12);
+                } else if (type === 'powerup') {
+                    const notes = [440, 554, 659, 880, 1108];
+                    notes.forEach((f, i) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(f, now + i * 0.055);
+                        gain.gain.setValueAtTime(0.14, now + i * 0.055);
+                        gain.gain.exponentialRampToValueAtTime(0.008, now + i * 0.055 + 0.14);
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.start(now + i * 0.055); osc.stop(now + i * 0.055 + 0.14);
+                    });
+                } else if (type === 'success') {
+                    const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        gain.gain.setValueAtTime(0.24, now + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.008, now + idx * 0.08 + 0.28);
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.28);
+                    });
+                } else if (type === 'oops' || type === 'boom') {
+                    const notes = [280, 190, 130];
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        gain.gain.setValueAtTime(0.18, now + idx * 0.09);
+                        gain.gain.exponentialRampToValueAtTime(0.008, now + idx * 0.09 + 0.18);
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.09); osc.stop(now + idx * 0.09 + 0.18);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        // Cheerful Arcade Chiptune Loop during Mini-Games
+        const BGM_MELODY = [523.25, 659.25, 783.99, 659.25, 880, 783.99, 659.25, 587.33];
+        function startArcadeBGM() {
+            stopArcadeBGM();
+            if (!bgmEnabled) return;
+            bgmStep = 0;
+            bgmInterval = setInterval(() => {
+                if (!bgmEnabled || !arcadeRunning) return;
+                try {
+                    ensureAudio();
+                    const now = audioCtx.currentTime;
+                    const freq = BGM_MELODY[bgmStep % BGM_MELODY.length];
+                    bgmStep++;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+                    gain.gain.setValueAtTime(0.045, now);
+                    gain.gain.exponentialRampToValueAtTime(0.004, now + 0.16);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.16);
+                } catch (e) {}
+            }, 190);
+        }
+
+        function stopArcadeBGM() {
+            if (bgmInterval) {
+                clearInterval(bgmInterval);
+                bgmInterval = null;
+            }
+        }
+
+        function toggleBGM() {
+            bgmEnabled = !bgmEnabled;
+            playSound('click');
+            const label = document.getElementById('bgm-label');
+            const btn = document.getElementById('btn-bgm-toggle');
+            if (bgmEnabled) {
+                label.textContent = 'BGM 켜짐';
+                btn.className = 'bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy';
+                if (arcadeRunning) startArcadeBGM();
+            } else {
+                label.textContent = 'BGM 꺼짐';
+                btn.className = 'bg-gray-100 text-gray-500 border-gray-300 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy';
+                stopArcadeBGM();
+            }
+        }
+
+        /* --------------------------------------------------
+           4. KOREAN TTS FOR 1ST GRADERS
+        -------------------------------------------------- */
+        let ttsEnabled = true;
+        function speakText(text) {
+            if (!ttsEnabled || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'ko-KR';
+                utter.rate = 0.96;
+                utter.pitch = 1.15;
+                window.speechSynthesis.speak(utter);
+            } catch (e) {}
+        }
+
+        function toggleTTS() {
+            ttsEnabled = !ttsEnabled;
+            playSound('click');
+            const label = document.getElementById('tts-label');
+            const btn = document.getElementById('btn-tts-toggle');
+            if (ttsEnabled) {
+                label.textContent = '읽어주기 켜짐';
+                btn.className = 'bg-sky-100 hover:bg-sky-200 text-sky-800 border-sky-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy';
+                speakText('목소리로 읽어주기가 켜졌어요!');
+            } else {
+                window.speechSynthesis && window.speechSynthesis.cancel();
+                label.textContent = '읽어주기 꺼짐';
+                btn.className = 'bg-gray-100 text-gray-500 border-gray-300 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy';
+            }
+        }
+
+        /* --------------------------------------------------
+           5. 8 DIVERSE CONFLICT & EMPATHY SCENARIOS
+        -------------------------------------------------- */
+        let solvedScenarios = [false, false, false, false, false, false, false, false];
+        let teacherMode = false;
+        let bestArcadeScore = 0;
+        let currentScenarioIndex = 0;
+
+        const SCENARIOS = [
+            {
+                id: 1,
+                category: "갈등 해결 · 실수 이해하기",
+                icon: "🏰💥",
+                title: "장난감 블록 성이 무너졌어요!",
+                place: "교실 놀이 시간",
+                char1: { species: "bunny", name: "나 (루루)", mood: "angry" },
+                char2: { species: "bear", name: "친구 (포포)", mood: "surprised" },
+                myFeeling: "화가 불끈! 😡",
+                friendFeeling: "앗, 실수! 미안 💦",
+                desc: "쉬는 시간 내내 열심히 쌓은 내 블록 성을 친구가 지나가다 실수로 발로 건드려 와르르 무너졌어요! 화가 불끈 나요.",
+                hint: "친구는 일부러 무너뜨린 게 아니라 지나가다 실수해서 깜짝 놀라고 미안해하고 있어요.",
+                choices: [
+                    {
+                        label: "A",
+                        text: "\"야! 너 때문에 다 망쳤잖아!\" 소리 지르며 친구가 만든 블록도 발로 차버린다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "더 화가 나요", friendAfter: "억울하고 슬퍼요",
+                        feedbackTitle: "앗! 다툼이 더 커져 버렸어요",
+                        feedbackDesc: "친구는 실수한 것인데 화를 내며 복수하면 친구도 마음이 다쳐서 서로 미워하게 돼요."
+                    },
+                    {
+                        label: "B",
+                        text: "후~ 심호흡을 한 뒤, \"블록이 무너져서 속상해. 나랑 같이 다시 쌓아줄래?\"라고 말한다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "마음이 풀려요", friendAfter: "미안하고 고마워요",
+                        feedbackTitle: "정답! 마음을 잇는 멋진 대화!",
+                        feedbackDesc: "내 속상한 마음을 바른 말로 표현했더니 친구가 \"정말 미안해! 더 멋지게 같이 쌓자!\"라며 도와주었어요!"
+                    },
+                    {
+                        label: "C",
+                        text: "아무 말도 안 하고 토라져서 교실 구석에 앉아 혼자 훌쩍훌쩍 운다.",
+                        isCorrect: false,
+                        c1After: "sad", c2After: "surprised",
+                        myAfter: "계속 답답해요", friendAfter: "어쩔 줄 몰라요",
+                        feedbackTitle: "마음을 말로 표현해야 친구가 알 수 있어요",
+                        feedbackDesc: "말을 하지 않고 울기만 하면 친구는 어떻게 사과하고 도와주어야 할지 몰라서 당황해요."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                category: "갈등 해결 · 양보와 순서",
+                icon: "🖍️🌈",
+                title: "무지개 크레파스는 하나뿐!",
+                place: "미술 시간",
+                char1: { species: "dog", name: "나 (뭉치)", mood: "angry" },
+                char2: { species: "cat", name: "짝꿍 (나비)", mood: "surprised" },
+                myFeeling: "내가 먼저 쓸래! 😤",
+                friendFeeling: "나도 꼭 필요한데! 😮",
+                desc: "즐거운 미술 시간! 반짝이는 무지개 크레파스가 딱 한 개 남았는데 나와 짝꿍이 동시에 잡았어요!",
+                hint: "짝꿍도 멋진 그림을 그리고 싶어서 무지개 크레파스를 기다리고 있었어요.",
+                choices: [
+                    {
+                        label: "A",
+                        text: "힘껏 잡아당겨서 내가 먼저 뺏은 뒤 혼자서 끝까지 다 쓴다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "미안하고 불편해요", friendAfter: "속상하고 눈물 나요",
+                        feedbackTitle: "힘으로 뺏으면 짝꿍의 마음이 다쳐요!",
+                        feedbackDesc: "혼자만 욕심을 부리면 짝꿍은 그림을 못 그려서 슬퍼지고 크레파스가 부러질 수도 있어요."
+                    },
+                    {
+                        label: "B",
+                        text: "\"가위바위보로 순서를 정해서 조금씩 번갈아 쓰자!\"라고 약속한다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "기분 좋게 그려요", friendAfter: "고맙고 신나요",
+                        feedbackTitle: "최고예요! 공정한 약속으로 해결했어요!",
+                        feedbackDesc: "순서를 정해 사이좋게 나누어 썼더니 둘 다 알록달록 멋진 무지개 그림을 완성했어요!"
+                    },
+                    {
+                        label: "C",
+                        text: "\"흥! 안 그려!\" 소리치며 내 도화지를 구겨서 던진다.",
+                        isCorrect: false,
+                        c1After: "sad", c2After: "surprised",
+                        myAfter: "내 그림만 망쳤어요", friendAfter: "깜짝 놀라고 무서워요",
+                        feedbackTitle: "화풀이하면 내 그림까지 망치게 돼요",
+                        feedbackDesc: "화를 참지 못하고 물건을 던지면 문제도 해결되지 않고 내 마음만 더 속상해져요."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                category: "친구 마음 공감 · 고운 말",
+                icon: "🌷💬",
+                title: "별명 부르기는 속상해!",
+                place: "교실 쉬는 시간",
+                char1: { species: "squirrel", name: "나 (토리)", mood: "surprised" },
+                char2: { species: "bunny", name: "친구 (루루)", mood: "sad" },
+                myFeeling: "재밌는 장난인데? 😜",
+                friendFeeling: "마음이 콕콕 아파 😢",
+                desc: "내가 재미있어서 친구에게 장난스러운 별명을 부르며 웃었더니, 친구 얼굴이 빨개지면서 눈에 눈물이 고였어요!",
+                hint: "나는 재미있는 장난이었지만, 듣는 친구가 속상해한다면 장난이 아니라 마음 아픈 말이에요.",
+                choices: [
+                    {
+                        label: "A",
+                        text: "\"에이~ 장난인데 왜 울어! 울보야!\"라며 더 크게 놀린다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "친구를 잃게 돼요", friendAfter: "마음에 큰 상처가 나요",
+                        feedbackTitle: "앗! 친구의 마음이 더 크게 다쳤어요!",
+                        feedbackDesc: "친구가 속상해하는데 더 놀리면 친구는 학교에 오기 싫을 만큼 마음이 아파요."
+                    },
+                    {
+                        label: "B",
+                        text: "장난을 바로 멈추고 \"기분 나쁘게 해서 미안해. 이제 예쁜 이름으로 부를게!\"라고 사과한다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "뿌듯하고 따뜻해요", friendAfter: "마음이 사르르 풀려요",
+                        feedbackTitle: "참 잘했어요! 친구의 마음을 잘 살폈어요!",
+                        feedbackDesc: "친구의 표정을 보고 바로 사과했더니 친구가 환하게 웃으며 다시 친하게 놀았어요!"
+                    },
+                    {
+                        label: "C",
+                        text: "민망해서 사과도 안 하고 모른 척 다른 곳으로 도망간다.",
+                        isCorrect: false,
+                        c1After: "surprised", c2After: "sad",
+                        myAfter: "마음이 계속 무거워요", friendAfter: "혼자 남아 외로워요",
+                        feedbackTitle: "실수했을 때는 용기 내어 사과해요",
+                        feedbackDesc: "모른 척 도망가면 친구의 마음 상처가 그대로 남아서 사이가 멀어지게 돼요."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                category: "갈등 해결 · 공동체 규칙",
+                icon: "🍩🏃",
+                title: "급식 줄에서 새치기를 했어요!",
+                place: "급식실 앞 복도",
+                char1: { species: "lion", name: "나 (레오)", mood: "angry" },
+                char2: { species: "dog", name: "친구 (뭉치)", mood: "surprised" },
+                myFeeling: "차례를 지켜야지! 😮",
+                friendFeeling: "빨리 먹고 싶어! 🍩",
+                desc: "맛있는 간식이 나오는 날! 차례대로 줄을 서서 기다리고 있는데, 친구가 내 앞으로 쏙 새치기를 했어요!",
+                hint: "배가 고파도 우리 반 모두가 약속한 차례와 질서를 지켜야 안전하고 기분 좋게 먹을 수 있어요.",
+                choices: [
+                    {
+                        label: "A",
+                        text: "친구의 어깨를 두 손으로 세게 밀쳐서 줄 밖으로 넘어뜨린다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "선생님께 혼나요", friendAfter: "넘어져서 크게 다쳐요",
+                        feedbackTitle: "위험해요! 몸으로 밀치면 절대 안 돼요!",
+                        feedbackDesc: "급식실 앞에서 밀치면 친구들이 도미노처럼 넘어져서 크게 다칠 수 있어요."
+                    },
+                    {
+                        label: "B",
+                        text: "\"우리 다 같이 줄 서서 기다리고 있어. 차례를 지켜주면 좋겠어!\"라고 바른 말로 이야기한다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "질서를 지켜 뿌듯해요", friendAfter: "사과하고 뒤로 줄 서요",
+                        feedbackTitle: "정답! 바르고 당당한 말로 규칙을 지켰어요!",
+                        feedbackDesc: "고운 말로 약속을 알려주었더니 친구도 \"미안해, 뒤로 가서 줄 설게!\"라며 순서를 지켰어요."
+                    },
+                    {
+                        label: "C",
+                        text: "나도 똑같이 맨 앞자리로 달려가서 다른 친구 앞에 새치기한다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "angry",
+                        myAfter: "교실 질서가 무너져요", friendAfter: "모두가 화가 나요",
+                        feedbackTitle: "나까지 새치기하면 줄이 엉망이 돼요!",
+                        feedbackDesc: "모두가 약속을 어기면 다툼이 생겨서 아무도 즐겁게 급식을 먹을 수 없어요."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                category: "친구 마음 이해 · 먼저 손 내밀기",
+                icon: "🌱🤗",
+                title: "혼자 우두커니 서 있는 친구",
+                place: "운동장 구석",
+                char1: { species: "bunny", name: "나 (루루)", mood: "happy" },
+                char2: { species: "cat", name: "친구 (나비)", mood: "shy" },
+                myFeeling: "신나게 놀자! 🎵",
+                friendFeeling: "나도 끼고 싶은데.. 👉👈",
+                desc: "쉬는 시간에 친구들과 신나게 놀고 있는데, 한 친구가 끼지 못하고 구석에서 부러운 눈으로 손만 만지작거리고 있어요.",
+                hint: "부끄러움이 많아서 \"나도 같이 놀자\"라고 먼저 말하지 못하고 망설이는 친구의 마음을 헤아려 보아요.",
+                choices: [
+                    {
+                        label: "A",
+                        text: "먼저 다가가 환하게 웃으며 \"나비야! 우리랑 같이 술래잡기할래?\"라고 손을 내민다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "마음이 따뜻해져요", friendAfter: "감동받고 행복해요",
+                        feedbackTitle: "감동이에요! 친구의 숨은 마음을 알아주었네요!",
+                        feedbackDesc: "먼저 따뜻하게 다가간 한마디 덕분에 부끄러워하던 친구도 신나게 어울려 놀 수 있었어요!"
+                    },
+                    {
+                        label: "B",
+                        text: "\"쟤는 왜 저기 혼자 서 있냐? 이상해!\"라며 수군거린다.",
+                        isCorrect: false,
+                        c1After: "surprised", c2After: "sad",
+                        myAfter: "배려심이 부족해요", friendAfter: "외롭고 눈물이 나요",
+                        feedbackTitle: "수군거리면 친구가 더 외로워져요!",
+                        feedbackDesc: "용기를 내지 못해 서 있는 친구를 보고 수군거리면 친구는 마음의 문을 닫게 돼요."
+                    },
+                    {
+                        label: "C",
+                        text: "나랑 상관없는 일이라고 생각하고 아예 모른 척 지나친다.",
+                        isCorrect: false,
+                        c1After: "shy", c2After: "sad",
+                        myAfter: "좋은 친구를 놓쳤어요", friendAfter: "쉬는 시간 내내 슬퍼요",
+                        feedbackTitle: "작은 관심과 배려가 행복한 교실을 만들어요",
+                        feedbackDesc: "혼자 있는 친구에게 먼저 다가가 말을 걸어주면 우리 반 모두가 행복해져요."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                category: "친구 마음 이해 · 돕기와 배려",
+                icon: "🥛💦",
+                title: "우유를 쏟아서 당황한 친구!",
+                place: "우유 마시는 시간",
+                char1: { species: "bear", name: "나 (포포)", mood: "surprised" },
+                char2: { species: "squirrel", name: "친구 (토리)", mood: "sad" },
+                myFeeling: "앗, 우유가 쏟아졌네! 😮",
+                friendFeeling: "어떡하지.. 창피해 😭",
+                desc: "우유갑을 열다가 친구가 실수로 책상과 옷에 우유를 콸콸 쏟았어요! 친구는 얼굴이 새빨개져서 울먹거리고 있어요.",
+                hint: "실수로 우유를 쏟은 친구가 가장 당황스럽고 속상해요. 이럴 때 어떤 말과 행동이 힘이 될까요?",
+                choices: [
+                    {
+                        label: "A",
+                        text: "\"으악! 냄새나! 칠칠맞게 왜 쏟았어!\"라며 소리를 지르고 코를 막는다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "교실이 시끄러워져요", friendAfter: "창피해서 엉엉 울어요",
+                        feedbackTitle: "실수한 친구를 놀리면 마음이 무너져요!",
+                        feedbackDesc: "누구나 실수할 수 있어요. 당황한 친구에게 화를 내면 친구는 더 크게 상처받아요."
+                    },
+                    {
+                        label: "B",
+                        text: "\"괜찮아? 많이 놀랐지! 내가 휴지 가져와서 같이 닦아줄게!\"라며 도와준다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "든든한 도우미!", friendAfter: "고맙고 안심이 돼요",
+                        feedbackTitle: "최고의 배려왕! 친구의 당황한 마음을 감싸주었어요!",
+                        feedbackDesc: "따뜻한 말 한마디와 휴지 한 장으로 친구의 눈물을 미소로 바꾸어 주었어요!"
+                    },
+                    {
+                        label: "C",
+                        text: "우유 쏟은 모습을 보며 손가락질하고 깔깔깔 큰 소리로 웃는다.",
+                        isCorrect: false,
+                        c1After: "surprised", c2After: "sad",
+                        myAfter: "친구가 나를 미워해요", friendAfter: "부끄럽고 화가 나요",
+                        feedbackTitle: "친구의 실수를 비웃으면 안 돼요!",
+                        feedbackDesc: "내가 실수했을 때 누군가 비웃는다면 얼마나 속상할지 입장을 바꾸어 생각해 보아요."
+                    }
+                ]
+            },
+            {
+                id: 7,
+                category: "갈등 해결 · 서로 살피고 사과하기",
+                icon: "🩹🤝",
+                title: "술래잡기하다가 쿵! 부딪혔어요",
+                place: "체육 시간",
+                char1: { species: "dog", name: "나 (뭉치)", mood: "sad" },
+                char2: { species: "lion", name: "친구 (레오)", mood: "sad" },
+                myFeeling: "무릎이 따가워! 😢",
+                friendFeeling: "나도 넘어져서 아파! 😣",
+                desc: "술래잡기를 하며 앞만 보고 뛰다가 친구와 쿵! 부딪혀서 둘 다 넘어졌어요. 내 무릎도 아프고 친구도 아파 보여요.",
+                hint: "나만 아픈 것이 아니라 부딪힌 친구도 똑같이 놀라고 아파요. 서로를 먼저 살펴주면 어떨까요?",
+                choices: [
+                    {
+                        label: "A",
+                        text: "\"앞 좀 똑바로 보고 다녀!\"라며 아파하는 친구에게 화부터 낸다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "angry",
+                        myAfter: "싸우느라 더 아파요", friendAfter: "억울해서 같이 화내요",
+                        feedbackTitle: "서로 화를 내면 아픈 마음이 두 배가 돼요!",
+                        feedbackDesc: "같이 뛰다가 부딪힌 사고인데 남 탓만 하면 좋은 친구 사이가 깨지게 돼요."
+                    },
+                    {
+                        label: "B",
+                        text: "\"부딪혀서 미안해, 괜찮아? 많이 다쳤어? 같이 보건실에 가자!\"라며 손을 잡아준다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "마음이 훈훈해져요", friendAfter: "고마워서 같이 챙겨줘요",
+                        feedbackTitle: "멋져요! 서로 아픔을 살피니 우정이 더 깊어졌어요!",
+                        feedbackDesc: "내가 먼저 괜찮냐고 물어보았더니 친구도 \"너도 괜찮아? 미안해!\"라며 서로 먼지를 털어주었어요."
+                    },
+                    {
+                        label: "C",
+                        text: "넘어진 친구가 나를 잡아당겼다고 거짓말로 선생님께 일러바친다.",
+                        isCorrect: false,
+                        c1After: "surprised", c2After: "sad",
+                        myAfter: "거짓말 때문에 불안해요", friendAfter: "너무 억울하고 슬퍼요",
+                        feedbackTitle: "사실대로 말하고 서로 사과하는 것이 바른 태도예요",
+                        feedbackDesc: "실수로 부딪힌 일을 거짓으로 꾸며 말하면 친구에게 큰 상처를 주게 돼요."
+                    }
+                ]
+            },
+            {
+                id: 8,
+                category: "갈등 해결 · 경청과 타협",
+                icon: "🛝⚖️",
+                title: "그네 탈까? 미끄럼틀 탈까?",
+                place: "신나는 놀이터",
+                char1: { species: "cat", name: "나 (나비)", mood: "angry" },
+                char2: { species: "bunny", name: "친구 (루루)", mood: "angry" },
+                myFeeling: "무조건 그네 탈 거야! 😤",
+                friendFeeling: "나는 미끄럼틀이 좋아! 😣",
+                desc: "친구와 둘이 놀이터에 나왔어요. 나는 그네를 타고 싶은데 친구는 미끄럼틀을 타자고 해요. 서로 생각이 다를 때 어떻게 할까요?",
+                hint: "내 생각만 옳다고 우기면 같이 놀 수 없어요. 둘 다 기분 좋게 놀 수 있는 방법을 찾아보세요!",
+                choices: [
+                    {
+                        label: "A",
+                        text: "\"그럼 미끄럼틀 먼저 5번 타고, 그다음에 그네 같이 타러 가자!\"라고 타협한다.",
+                        isCorrect: true,
+                        c1After: "happy", c2After: "happy",
+                        myAfter: "둘 다 타서 신나요!", friendAfter: "존중받아 행복해요!",
+                        feedbackTitle: "정답! 서로 양보하고 타협하니 즐거움이 두 배!",
+                        feedbackDesc: "친구의 의견도 귀 기울여 듣고 순서를 정했더니 쉬는 시간 내내 웃음이 끊이지 않았어요!"
+                    },
+                    {
+                        label: "B",
+                        text: "친구의 팔을 억지로 세게 잡아끌고 그네 쪽으로 끌고 간다.",
+                        isCorrect: false,
+                        c1After: "angry", c2After: "sad",
+                        myAfter: "친구가 웃지 않아요", friendAfter: "팔도 아프고 속상해요",
+                        feedbackTitle: "억지로 끌고 가면 함께 노는 즐거움이 사라져요",
+                        feedbackDesc: "내 고집만 피우면 친구는 존중받지 못했다고 느껴서 같이 놀고 싶지 않게 돼요."
+                    },
+                    {
+                        label: "C",
+                        text: "\"너 혼자 마음대로 해! 난 집에 갈 거야!\" 하고 가버린다.",
+                        isCorrect: false,
+                        c1After: "sad", c2After: "sad",
+                        myAfter: "혼자라 심심해요", friendAfter: "외롭고 슬퍼요",
+                        feedbackTitle: "의견이 다르다고 가버리면 둘 다 외로워져요",
+                        feedbackDesc: "조금씩 양보하고 대화하면 둘 다 재미있게 놀 수 있는 약속을 만들 수 있어요."
+                    }
+                ]
+            }
+        ];
+
+        /* --------------------------------------------------
+           6. NAVIGATION & SCENARIO UI RENDERING
+        -------------------------------------------------- */
+        function getKeyCount() {
+            if (teacherMode) return 8;
+            return solvedScenarios.filter(Boolean).length;
+        }
+
+        function toggleTeacherMode() {
+            teacherMode = !teacherMode;
+            playSound('powerup');
+            const btn = document.getElementById('btn-teacher');
+            const label = document.getElementById('teacher-label');
+            if (teacherMode) {
+                label.textContent = '프리패스 켜짐 (전체열림)';
+                btn.className = 'bg-purple-600 text-white border-purple-800 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy shadow';
+                speakText('선생님 프리패스 모드가 켜져서 모든 오락실 게임이 열렸어요!');
+            } else {
+                label.textContent = '선생님 프리패스';
+                btn.className = 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-400 px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1 btn-candy';
+            }
+            renderAllProgress();
+            updateGameLocksUI();
+        }
+
+        function showScreen(screenName) {
+            playSound('click');
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            ['home', 'scenario', 'games', 'pledge'].forEach(id => {
+                document.getElementById('screen-' + id).classList.add('hidden');
+            });
+            document.getElementById('screen-' + screenName).classList.remove('hidden');
+            renderAllProgress();
+            if (screenName === 'pledge') updatePledgePreview();
+        }
+
+        function renderAllProgress() {
+            const keys = getKeyCount();
+            const headerKeys = document.getElementById('header-keys');
+            headerKeys.innerHTML = '';
+            for (let i = 0; i < 8; i++) {
+                const unlocked = teacherMode || solvedScenarios[i];
+                const span = document.createElement('span');
+                span.className = unlocked ? 'scale-110 transition-transform' : 'opacity-25 grayscale';
+                span.textContent = unlocked ? '🗝️' : '🔒';
+                headerKeys.appendChild(span);
+            }
+            document.getElementById('header-key-count').textContent = `${keys}/8`;
+            document.getElementById('header-best-score').textContent = bestArcadeScore;
+
+            const badge = document.getElementById('game-badge');
+            if (keys >= 1) {
+                badge.textContent = `열림! (열쇠 ${keys}개)`;
+                badge.className = 'bg-yellow-300 text-amber-950 text-sm px-2.5 py-0.5 rounded-full animate-pulse shadow';
+            } else {
+                badge.textContent = '잠김🔒';
+                badge.className = 'bg-white text-orange-600 text-sm px-2.5 py-0.5 rounded-full';
+            }
+
+            // Render 8 Scenario Cards
+            const grid = document.getElementById('scenario-grid');
+            grid.innerHTML = '';
+            const cardThemes = [
+                'from-rose-50 to-pink-100 border-pink-300',
+                'from-amber-50 to-yellow-100 border-amber-300',
+                'from-purple-50 to-fuchsia-100 border-purple-300',
+                'from-sky-50 to-blue-100 border-sky-300',
+                'from-emerald-50 to-teal-100 border-emerald-300',
+                'from-orange-50 to-amber-100 border-orange-300',
+                'from-indigo-50 to-violet-100 border-indigo-300',
+                'from-lime-50 to-emerald-100 border-lime-400'
+            ];
+
+            SCENARIOS.forEach((sc, idx) => {
+                const done = solvedScenarios[idx];
+                const card = document.createElement('button');
+                card.onclick = () => openScenario(idx);
+                card.className = `bg-gradient-to-b ${cardThemes[idx]} border-4 rounded-2xl p-3.5 text-left flex flex-col justify-between btn-candy hover:scale-[1.02] transition relative overflow-hidden`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between w-full mb-1">
+                        <span class="bg-white/90 text-gray-800 text-xs px-2.5 py-0.5 rounded-full border shadow-2xs">이야기 ${idx + 1}</span>
+                        <span class="text-sm px-2 py-0.5 rounded-full ${done ? 'bg-amber-300 text-amber-950' : 'bg-white/70 text-gray-600'}">${done ? '🗝️해결!' : '❓도전'}</span>
+                    </div>
+                    <div class="flex items-center justify-center gap-2 my-2">
+                        <div class="w-12 h-12">${createCharacterSVG(sc.char1.species, done ? 'happy' : sc.char1.mood)}</div>
+                        <span class="text-2xl">${sc.icon}</span>
+                        <div class="w-12 h-12">${createCharacterSVG(sc.char2.species, done ? 'happy' : sc.char2.mood)}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-indigo-700 mb-0.5">${sc.category}</div>
+                        <div class="text-base sm:text-lg text-gray-900 leading-snug">${sc.title}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function startNextUnfinishedScenario() {
+            const nextIdx = solvedScenarios.findIndex(v => !v);
+            openScenario(nextIdx === -1 ? 0 : nextIdx);
+        }
+
+        function openScenario(idx) {
+            currentScenarioIndex = idx;
+            const sc = SCENARIOS[idx];
+            showScreen('scenario');
+
+            document.getElementById('sc-badge').textContent = `이야기 ${sc.id} / 8`;
+            document.getElementById('sc-category').textContent = sc.category;
+            document.getElementById('sc-title').textContent = sc.title;
+            document.getElementById('sc-char1-svg').innerHTML = createCharacterSVG(sc.char1.species, sc.char1.mood);
+            document.getElementById('sc-char1-name').textContent = sc.char1.name;
+            document.getElementById('sc-center-prop').textContent = sc.icon;
+            document.getElementById('sc-char2-svg').innerHTML = createCharacterSVG(sc.char2.species, sc.char2.mood);
+            document.getElementById('sc-char2-name').textContent = sc.char2.name;
+
+            document.getElementById('sc-my-feeling').textContent = sc.myFeeling;
+            document.getElementById('sc-friend-feeling').textContent = sc.friendFeeling;
+            document.getElementById('sc-desc').textContent = sc.desc;
+            document.getElementById('sc-hint').textContent = sc.hint;
+
+            const choicesBox = document.getElementById('sc-choices');
+            choicesBox.innerHTML = '';
+            const btnColors = [
+                'bg-rose-50 hover:bg-rose-100 border-rose-300 text-rose-950',
+                'bg-amber-50 hover:bg-amber-100 border-amber-300 text-amber-950',
+                'bg-indigo-50 hover:bg-indigo-100 border-indigo-300 text-indigo-950'
+            ];
+
+            sc.choices.forEach((ch, cIdx) => {
+                const btn = document.createElement('div');
+                btn.className = `w-full p-3.5 sm:p-4 rounded-2xl border-4 text-left flex items-center justify-between gap-3 cursor-pointer btn-candy ${btnColors[cIdx]}`;
+                btn.onclick = () => evaluateChoice(idx, cIdx);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white border-2 border-current flex items-center justify-center text-xl shrink-0 shadow-sm">
+                            ${ch.label}
+                        </span>
+                        <span class="font-body text-lg sm:text-xl leading-snug">${ch.text}</span>
+                    </div>
+                    <button type="button" onclick="event.stopPropagation(); speakText('${ch.text.replace(/"/g, '')}')" class="bg-white hover:bg-yellow-100 p-2.5 rounded-xl border-2 border-gray-300 text-gray-700 shrink-0 shadow-xs" title="선택지 소리 듣기">
+                        🔊
+                    </button>
+                `;
+                choicesBox.appendChild(btn);
+            });
+
+            speakCurrentScenario();
+        }
+
+        function speakCurrentScenario() {
+            const sc = SCENARIOS[currentScenarioIndex];
+            speakText(`${sc.title}. ${sc.desc}`);
+        }
+
+        function evaluateChoice(scIdx, choiceIdx) {
+            const sc = SCENARIOS[scIdx];
+            const ch = sc.choices[choiceIdx];
+            const modal = document.getElementById('modal-feedback');
+            const card = document.getElementById('feedback-card');
+            const title = document.getElementById('fb-title');
+            const text = document.getElementById('fb-text');
+            const heartResult = document.getElementById('fb-heart-result');
+            const actions = document.getElementById('fb-actions');
+
+            document.getElementById('fb-char1').innerHTML = createCharacterSVG(sc.char1.species, ch.c1After);
+            document.getElementById('fb-char2').innerHTML = createCharacterSVG(sc.char2.species, ch.c2After);
+            document.getElementById('fb-bridge-icon').textContent = ch.isCorrect ? '💖' : '💔';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            title.textContent = ch.feedbackTitle;
+            text.textContent = ch.feedbackDesc;
+
+            if (ch.isCorrect) {
+                playSound('success');
+                launchConfetti();
+                solvedScenarios[scIdx] = true;
+                renderAllProgress();
+
+                card.className = 'bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 border-4 border-emerald-400 shadow-2xl text-center animate-pop relative';
+                title.className = 'text-2xl sm:text-4xl mb-2 text-emerald-600';
+                heartResult.className = 'mt-3 text-sm sm:text-base font-bold py-1.5 px-4 rounded-full inline-block bg-emerald-100 text-emerald-900 border-2 border-emerald-300';
+                heartResult.innerHTML = `내 마음: ${ch.myAfter} 💖 친구 마음: ${ch.friendAfter} (+🗝️ 황금 열쇠 획득!)`;
+
+                actions.innerHTML = `
+                    <button onclick="closeFeedbackModal(); openGameZone();" class="bg-gradient-to-b from-amber-400 to-orange-500 text-white border-orange-700 text-xl sm:text-2xl px-6 py-3.5 rounded-2xl btn-candy shadow-xl animate-glow">
+                        🕹️ 스릴 만점 오락실 게임하기!
+                    </button>
+                    <button onclick="closeFeedbackModal(); goNextScenarioOrHome();" class="bg-sky-500 hover:bg-sky-600 text-white border-sky-700 text-lg sm:text-xl px-5 py-3.5 rounded-2xl btn-candy">
+                        ➡️ 다음 이야기 풀기
+                    </button>
+                `;
+                speakText(`${ch.feedbackTitle}. ${ch.feedbackDesc} 황금 열쇠를 얻었어요! 이제 신나는 게임을 해보세요!`);
+            } else {
+                playSound('oops');
+                const scBox = document.getElementById('scenario-box');
+                scBox.classList.remove('animate-shake');
+                void scBox.offsetWidth;
+                scBox.classList.add('animate-shake');
+
+                card.className = 'bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 border-4 border-rose-400 shadow-2xl text-center animate-pop relative';
+                title.className = 'text-2xl sm:text-3xl mb-2 text-rose-600';
+                heartResult.className = 'mt-3 text-sm sm:text-base font-bold py-1.5 px-4 rounded-full inline-block bg-rose-100 text-rose-900 border-2 border-rose-300';
+                heartResult.innerHTML = `내 마음: ${ch.myAfter} 💔 친구 마음: ${ch.friendAfter}`;
+
+                actions.innerHTML = `
+                    <button onclick="closeFeedbackModal()" class="bg-rose-500 hover:bg-rose-600 text-white border-rose-700 text-xl sm:text-2xl px-7 py-3.5 rounded-2xl btn-candy shadow-lg">
+                        🌱 친구 마음을 생각하며 다시 고를래요!
+                    </button>
+                `;
+                speakText(`${ch.feedbackTitle}. ${ch.feedbackDesc} 다시 한번 따뜻한 행동을 골라볼까요?`);
+            }
+        }
+
+        function closeFeedbackModal() {
+            playSound('click');
+            const modal = document.getElementById('modal-feedback');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function goNextScenarioOrHome() {
+            const nextIdx = solvedScenarios.findIndex(v => !v);
+            if (nextIdx !== -1) openScenario(nextIdx);
+            else showScreen('home');
+        }
+
+        /* --------------------------------------------------
+           7. THRILLING ARCADE GAME ZONE CONTROLLER
+        -------------------------------------------------- */
+        let currentArcadeGame = 1;
+        let arcadeRunning = false;
+        let arcadeScore = 0;
+        let arcadeCombo = 0;
+        let arcadeTimeLeft = 35;
+        let arcadeHP = 3;
+        let arcadeTimerId = null;
+        let arcadeAnimId = null;
+        let feverMode = false;
+
+        function openGameZone() {
+            const keys = getKeyCount();
+            if (keys < 1) {
+                playSound('oops');
+                speakText('먼저 마음 이야기를 한 개 이상 해결해서 황금 열쇠를 모아주세요!');
+                startNextUnfinishedScenario();
+                return;
+            }
+            showScreen('games');
+            updateGameLocksUI();
+            selectArcadeGame(1);
+        }
+
+        function updateGameLocksUI() {
+            const keys = getKeyCount();
+            [1, 2, 3].forEach(req => {
+                const badge = document.getElementById(`lock-game-${req}`);
+                if (keys >= req) {
+                    badge.textContent = '🔥 플레이 가능!';
+                    badge.className = 'text-xs bg-emerald-300 text-emerald-950 px-2 py-0.5 rounded-full inline-block mb-0.5 font-bold';
+                } else {
+                    badge.textContent = `🔒 열쇠 ${req}개 필요`;
+                    badge.className = 'text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full inline-block mb-0.5';
+                }
+            });
+        }
+
+        function stopAllGames() {
+            arcadeRunning = false;
+            stopArcadeBGM();
+            if (arcadeTimerId) clearInterval(arcadeTimerId);
+            if (arcadeAnimId) cancelAnimationFrame(arcadeAnimId);
+            if (whackSpawnInterval) clearInterval(whackSpawnInterval);
+            document.getElementById('arcade-cabinet').classList.remove('fever-border');
+            document.getElementById('hud-fever-badge').classList.add('hidden');
+        }
+
+        function selectArcadeGame(num) {
+            const keys = getKeyCount();
+            if (keys < num) {
+                playSound('oops');
+                speakText(`이 게임은 황금 열쇠가 ${num}개 필요해요! 마음 이야기를 더 풀고 오세요!`);
+                return;
+            }
+            playSound('click');
+            stopAllGames();
+            currentArcadeGame = num;
+
+            [1, 2, 3].forEach(n => {
+                const tab = document.getElementById(`tab-game-${n}`);
+                if (n === num) tab.classList.add('ring-4', 'ring-amber-400', 'scale-[1.02]');
+                else tab.classList.remove('ring-4', 'ring-amber-400', 'scale-[1.02]');
+            });
+
+            const stage1 = document.getElementById('stage-game-1');
+            const stageCanvas = document.getElementById('stage-canvas-wrap');
+            const ctrl2 = document.getElementById('controls-game-2');
+            const ctrl3 = document.getElementById('controls-game-3');
+            const overlay = document.getElementById('arcade-overlay');
+            document.getElementById('overlay-rank').classList.add('hidden');
+
+            arcadeScore = 0;
+            arcadeCombo = 0;
+            arcadeHP = 3;
+            arcadeTimeLeft = 35;
+            updateHUD();
+
+            if (num === 1) {
+                document.getElementById('hud-game-title').textContent = '🔨 1. 나쁜 행동 뿅망치 대소동!';
+                stage1.classList.remove('hidden');
+                stageCanvas.classList.add('hidden');
+                ctrl2.classList.add('hidden');
+                ctrl3.classList.add('hidden');
+                overlay.classList.remove('hidden');
+                document.getElementById('overlay-icon').textContent = '🔨';
+                document.getElementById('overlay-title').textContent = '나쁜 행동 뿅망치 대소동!';
+                document.getElementById('overlay-desc').innerHTML =
+                    '구멍에서 쏙쏙 올라오는 <strong>장난꾸러기 나쁜 행동(새치기·놀리기·밀치기)</strong>을 제한 시간 안에 빠르게 터치하세요!<br>' +
+                    '😇 <strong>착한 친구</strong>는 치면 안 돼요! 중간에 나타나는 <strong>대왕 심술 보스👾</strong>도 연타로 물리치세요!';
+                buildWhackGrid();
+            } else if (num === 2) {
+                document.getElementById('hud-game-title').textContent = '🚀 2. 아슬아슬! 불꽃 피하기 질주';
+                stage1.classList.add('hidden');
+                stageCanvas.classList.remove('hidden');
+                ctrl2.classList.remove('hidden');
+                ctrl3.classList.add('hidden');
+                overlay.classList.remove('hidden');
+                document.getElementById('overlay-icon').textContent = '🚀';
+                document.getElementById('overlay-title').textContent = '아슬아슬! 불꽃 피하기 질주';
+                document.getElementById('overlay-desc').innerHTML =
+                    '달려오는 <strong>🔥화남 불꽃, ⚡짜증 번개, 💣미운 말 가시폭탄</strong>을 아슬아슬하게 피하고<br>' +
+                    '<strong>💖공감 하트</strong>와 <strong>🌟무적 무지개 별</strong>을 먹으며 최고 속도에 도전하세요!';
+            } else if (num === 3) {
+                document.getElementById('hud-game-title').textContent = '🎯 3. 팡팡! 먹구름 슈팅 디펜스';
+                stage1.classList.add('hidden');
+                stageCanvas.classList.remove('hidden');
+                ctrl2.classList.add('hidden');
+                ctrl3.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+                document.getElementById('overlay-icon').textContent = '🎯';
+                document.getElementById('overlay-title').textContent = '팡팡! 먹구름 슈팅 디펜스';
+                document.getElementById('overlay-desc').innerHTML =
+                    '행복한 우리 반 교실로 내려오는 <strong>다툼 먹구름 군단</strong>을 직접 터치해서 하트 레이저로 물리치세요!<br>' +
+                    '위험할 땐 <strong>🌈무지개 사과 폭탄</strong>과 <strong>❄️잠깐만 멈춤 시계</strong> 필살기를 쓰세요!';
+            }
+        }
+
+        function updateHUD() {
+            document.getElementById('hud-score').textContent = arcadeScore;
+            document.getElementById('hud-combo').textContent = arcadeCombo;
+            document.getElementById('hud-timer').textContent = arcadeTimeLeft;
+            document.getElementById('hud-hp').textContent = '❤️'.repeat(Math.max(0, arcadeHP)) + '🖤'.repeat(Math.max(0, 3 - arcadeHP));
+
+            const cabinet = document.getElementById('arcade-cabinet');
+            const feverBadge = document.getElementById('hud-fever-badge');
+            if (arcadeCombo >= 8) {
+                if (!feverMode) {
+                    feverMode = true;
+                    playSound('powerup');
+                }
+                cabinet.classList.add('fever-border');
+                feverBadge.classList.remove('hidden');
+            } else {
+                feverMode = false;
+                cabinet.classList.remove('fever-border');
+                feverBadge.classList.add('hidden');
+            }
+        }
+
+        function shakeArcadeCabinet() {
+            const cab = document.getElementById('arcade-cabinet');
+            cab.classList.remove('animate-shake');
+            void cab.offsetWidth;
+            cab.classList.add('animate-shake');
+        }
+
+        function startCurrentArcadeGame() {
+            playSound('powerup');
+            document.getElementById('arcade-overlay').classList.add('hidden');
+            arcadeScore = 0;
+            arcadeCombo = 0;
+            arcadeHP = 3;
+            arcadeTimeLeft = 35;
+            feverMode = false;
+            arcadeRunning = true;
+            updateHUD();
+            startArcadeBGM();
+
+            if (arcadeTimerId) clearInterval(arcadeTimerId);
+            arcadeTimerId = setInterval(() => {
+                if (!arcadeRunning) return;
+                arcadeTimeLeft--;
+                updateHUD();
+                if (arcadeTimeLeft <= 0) {
+                    finishArcadeGame('timeup');
+                }
+            }, 1000);
+
+            if (currentArcadeGame === 1) startGame1Whack();
+            else if (currentArcadeGame === 2) startGame2Runner();
+            else if (currentArcadeGame === 3) startGame3Defense();
+        }
+
+        function finishArcadeGame(reason) {
+            stopAllGames();
+            if (arcadeScore > bestArcadeScore) {
+                bestArcadeScore = arcadeScore;
+                document.getElementById('header-best-score').textContent = bestArcadeScore;
+            }
+            playSound('success');
+            launchConfetti();
+
+            const overlay = document.getElementById('arcade-overlay');
+            const rankEl = document.getElementById('overlay-rank');
+            overlay.classList.remove('hidden');
+            rankEl.classList.remove('hidden');
+
+            let rankTitle = '🌱 다정한 새싹 해결사';
+            if (arcadeScore >= 400) rankTitle = '👑 전설의 초특급 마음 수호천사!!';
+            else if (arcadeScore >= 220) rankTitle = '🌟 빛나는 우리 반 배려 대장!';
+
+            rankEl.textContent = rankTitle;
+            document.getElementById('overlay-icon').textContent = reason === 'hp0' ? '💦' : '🏆';
+            document.getElementById('overlay-title').textContent = `최종 점수: ${arcadeScore}점!`;
+            document.getElementById('overlay-desc').innerHTML =
+                `최고 기록: <strong>${bestArcadeScore}점</strong><br>친구와 마음을 잇는 멋진 순발력을 보여주었어요! 다시 한 번 최고 기록에 도전해 볼까요?`;
+            speakText(`게임 종료! ${arcadeScore}점을 얻었어요! ${rankTitle}!`);
+        }
+
+        /* --------------------------------------------------
+           GAME 1: ⚡ 나쁜 행동 뿅망치 대소동! (Whack-a-Bad-Behavior)
+        -------------------------------------------------- */
+        const WHACK_BAD_MOBS = [
+            { emoji: '😈', label: '새치기 대장!' },
+            { emoji: '🤬', label: '미운 별명 놀리기!' },
+            { emoji: '😤', label: '장난감 뺏기!' },
+            { emoji: '🗯️', label: '소리 지르기!' },
+            { emoji: '💥', label: '친구 밀치기!' }
+        ];
+        const WHACK_GOOD_FRIENDS = [
+            { emoji: '😇', label: '고운 말 친구' },
+            { emoji: '🤗', label: '양보하는 친구' }
+        ];
+        let whackHoles = [];
+        let whackSpawnInterval = null;
+        let whackBossActive = false;
+        let whackBossHP = 12;
+        let whackBossTriggered20 = false;
+        let whackBossTriggered8 = false;
+
+        function buildWhackGrid() {
+            const grid = document.getElementById('whack-grid');
+            grid.innerHTML = '';
+            whackHoles = [];
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'relative h-24 sm:h-28 flex flex-col items-center justify-end select-none';
+                cell.innerHTML = `
+                    <div class="mole-hole w-full h-10 sm:h-12 rounded-full absolute bottom-0 z-0"></div>
+                    <button id="mole-btn-${i}" onpointerdown="whackHoleTap(${i})" class="relative z-10 w-full h-24 sm:h-26 flex flex-col items-center justify-center transition-all duration-150 transform translate-y-6 opacity-0 pointer-events-none">
+                        <span id="mole-emoji-${i}" class="text-4xl sm:text-5xl drop-shadow">😈</span>
+                        <span id="mole-label-${i}" class="text-xs sm:text-sm bg-rose-600 text-white px-2 py-0.5 rounded-full mt-0.5 shadow border border-white">새치기!</span>
+                    </button>
+                `;
+                grid.appendChild(cell);
+                whackHoles.push({ active: false, type: 'bad', timeout: null });
+            }
+        }
+
+        function startGame1Whack() {
+            buildWhackGrid();
+            whackBossActive = false;
+            whackBossTriggered20 = false;
+            whackBossTriggered8 = false;
+            document.getElementById('whack-boss-banner').classList.add('hidden');
+
+            whackSpawnInterval = setInterval(() => {
+                if (!arcadeRunning || currentArcadeGame !== 1) return;
+
+                // Trigger Boss at 22s and 10s
+                if (arcadeTimeLeft === 22 && !whackBossTriggered20) {
+                    whackBossTriggered20 = true;
+                    spawnWhackBoss();
+                    return;
+                }
+                if (arcadeTimeLeft === 10 && !whackBossTriggered8) {
+                    whackBossTriggered8 = true;
+                    spawnWhackBoss();
+                    return;
+                }
+
+                // Spawn 1~2 moles rapidly
+                const count = Math.random() < 0.45 ? 2 : 1;
+                for (let c = 0; c < count; c++) {
+                    spawnRandomMole();
+                }
+            }, 520);
+        }
+
+        function spawnWhackBoss() {
+            whackBossActive = true;
+            whackBossHP = 10;
+            playSound('oops');
+            document.getElementById('whack-boss-banner').classList.remove('hidden');
+            document.getElementById('whack-boss-hp-bar').style.width = '100%';
+
+            const idx = 4; // Center hole
+            const hole = whackHoles[idx];
+            if (hole.timeout) clearTimeout(hole.timeout);
+            hole.active = true;
+            hole.type = 'boss';
+
+            const btn = document.getElementById(`mole-btn-${idx}`);
+            const emoji = document.getElementById(`mole-emoji-${idx}`);
+            const label = document.getElementById(`mole-label-${idx}`);
+
+            emoji.textContent = '👾';
+            emoji.className = 'text-5xl sm:text-6xl drop-shadow animate-boss';
+            label.textContent = `심술 대왕 보스! (${whackBossHP})`;
+            label.className = 'text-xs sm:text-sm bg-purple-700 text-yellow-300 px-2.5 py-0.5 rounded-full mt-0.5 shadow border-2 border-yellow-300 font-bold';
+            btn.className = 'relative z-10 w-full h-24 sm:h-26 flex flex-col items-center justify-center transition-all duration-100 transform translate-y-0 opacity-100 pointer-events-auto';
+        }
+
+        function spawnRandomMole() {
+            const freeIndices = whackHoles
+                .map((h, i) => (!h.active ? i : -1))
+                .filter(i => i !== -1 && !(whackBossActive && i === 4));
+            if (freeIndices.length === 0) return;
+
+            const idx = freeIndices[Math.floor(Math.random() * freeIndices.length)];
+            const hole = whackHoles[idx];
+            const isGood = Math.random() < 0.22;
+            hole.active = true;
+            hole.type = isGood ? 'good' : 'bad';
+
+            const btn = document.getElementById(`mole-btn-${idx}`);
+            const emoji = document.getElementById(`mole-emoji-${idx}`);
+            const label = document.getElementById(`mole-label-${idx}`);
+
+            if (isGood) {
+                const item = WHACK_GOOD_FRIENDS[Math.floor(Math.random() * WHACK_GOOD_FRIENDS.length)];
+                emoji.textContent = item.emoji;
+                emoji.className = 'text-4xl sm:text-5xl drop-shadow';
+                label.textContent = item.label;
+                label.className = 'text-xs sm:text-sm bg-emerald-500 text-white px-2 py-0.5 rounded-full mt-0.5 shadow border border-white';
+            } else {
+                const item = WHACK_BAD_MOBS[Math.floor(Math.random() * WHACK_BAD_MOBS.length)];
+                emoji.textContent = item.emoji;
+                emoji.className = 'text-4xl sm:text-5xl drop-shadow';
+                label.textContent = item.label;
+                label.className = 'text-xs sm:text-sm bg-rose-600 text-white px-2 py-0.5 rounded-full mt-0.5 shadow border border-white';
+            }
+
+            btn.className = 'relative z-10 w-full h-24 sm:h-26 flex flex-col items-center justify-center transition-all duration-150 transform translate-y-0 opacity-100 pointer-events-auto';
+
+            const stayDuration = Math.max(650, 1150 - (35 - arcadeTimeLeft) * 12);
+            hole.timeout = setTimeout(() => {
+                hideMole(idx);
+            }, stayDuration);
+        }
+
+        function hideMole(idx) {
+            const hole = whackHoles[idx];
+            if (!hole || hole.type === 'boss') return;
+            hole.active = false;
+            const btn = document.getElementById(`mole-btn-${idx}`);
+            if (btn) {
+                btn.className = 'relative z-10 w-full h-24 sm:h-26 flex flex-col items-center justify-center transition-all duration-150 transform translate-y-6 opacity-0 pointer-events-none';
+            }
+        }
+
+        function whackHoleTap(idx) {
+            if (!arcadeRunning) return;
+            const hole = whackHoles[idx];
+            if (!hole || !hole.active) return;
+
+            const emoji = document.getElementById(`mole-emoji-${idx}`);
+            const label = document.getElementById(`mole-label-${idx}`);
+
+            if (hole.type === 'boss') {
+                whackBossHP--;
+                arcadeCombo++;
+                const pts = feverMode ? 30 : 15;
+                arcadeScore += pts;
+                playSound('whack', arcadeCombo);
+                shakeArcadeCabinet();
+                document.getElementById('whack-boss-hp-bar').style.width = `${(whackBossHP / 10) * 100}%`;
+                label.textContent = `아야! (${whackBossHP})`;
+
+                if (whackBossHP <= 0) {
+                    whackBossActive = false;
+                    hole.active = false;
+                    hole.type = 'bad';
+                    arcadeScore += 120;
+                    playSound('powerup');
+                    launchConfetti();
+                    document.getElementById('whack-boss-banner').classList.add('hidden');
+                    emoji.textContent = '🥰';
+                    label.textContent = '+120점 보스 개심!!';
+                    label.className = 'text-xs sm:text-sm bg-yellow-300 text-amber-950 px-2 py-0.5 rounded-full font-bold';
+                    setTimeout(() => hideMole(idx), 450);
+                }
+                updateHUD();
+                return;
+            }
+
+            if (hole.timeout) clearTimeout(hole.timeout);
+            hole.active = false;
+
+            if (hole.type === 'bad') {
+                arcadeCombo++;
+                const gain = feverMode ? 40 : 20;
+                arcadeScore += gain;
+                playSound('whack', arcadeCombo);
+                emoji.textContent = '🥰';
+                label.textContent = `+${gain}점 착한마음!💖`;
+                label.className = 'text-xs sm:text-sm bg-amber-300 text-amber-950 px-2 py-0.5 rounded-full mt-0.5 font-bold';
+            } else {
+                // Hit a good friend by mistake!
+                arcadeCombo = 0;
+                arcadeScore = Math.max(0, arcadeScore - 15);
+                playSound('oops');
+                shakeArcadeCabinet();
+                emoji.textContent = '😢';
+                label.textContent = '앗! 착한친구! -15';
+                label.className = 'text-xs sm:text-sm bg-gray-800 text-white px-2 py-0.5 rounded-full mt-0.5';
+            }
+
+            updateHUD();
+            setTimeout(() => hideMole(idx), 320);
+        }
+
+        /* --------------------------------------------------
+           SHARED CANVAS SETUP FOR GAME 2 & GAME 3
+        -------------------------------------------------- */
+        const arcadeCanvas = document.getElementById('arcade-canvas');
+        const actx = arcadeCanvas.getContext('2d');
+        let floatingTexts = [];
+        let burstParticles = [];
+
+        function resizeArcadeCanvas() {
+            const rect = arcadeCanvas.parentElement.getBoundingClientRect();
+            arcadeCanvas.width = rect.width || 680;
+            arcadeCanvas.height = rect.height || 400;
+        }
+        window.addEventListener('resize', resizeArcadeCanvas);
+
+        function spawnFloatingText(x, y, text, color = '#FFD166') {
+            floatingTexts.push({ x, y, text, color, life: 32 });
+        }
+
+        function spawnBurst(x, y, color = '#FF4D6D', count = 14) {
+            for (let i = 0; i < count; i++) {
+                burstParticles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 9,
+                    vy: (Math.random() - 0.5) * 9,
+                    r: 4 + Math.random() * 4,
+                    color,
+                    life: 24
+                });
+            }
+        }
+
+        function drawFX() {
+            for (let i = burstParticles.length - 1; i >= 0; i--) {
+                const p = burstParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                actx.fillStyle = p.color;
+                actx.beginPath();
+                actx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                actx.fill();
+                if (p.life <= 0) burstParticles.splice(i, 1);
+            }
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                const ft = floatingTexts[i];
+                ft.y -= 1.5;
+                ft.life--;
+                actx.font = 'bold 22px Jua';
+                actx.fillStyle = ft.color;
+                actx.textAlign = 'center';
+                actx.fillText(ft.text, ft.x, ft.y);
+                if (ft.life <= 0) floatingTexts.splice(i, 1);
+            }
+        }
+
+        /* --------------------------------------------------
+           GAME 2: 🚀 아슬아슬! 불꽃 피하기 질주 (Thrilling Dodge & Dash)
+        -------------------------------------------------- */
+        let runnerX = 300;
+        let runnerTargetX = 300;
+        let runnerInvincibleTimer = 0;
+        let runnerItems = [];
+        let roadLinesY = 0;
+
+        function startGame2Runner() {
+            resizeArcadeCanvas();
+            runnerX = arcadeCanvas.width / 2;
+            runnerTargetX = runnerX;
+            runnerInvincibleTimer = 0;
+            runnerItems = [];
+            floatingTexts = [];
+            burstParticles = [];
+            loopGame2Runner();
+        }
+
+        function moveRunnerLane(dir) {
+            const step = arcadeCanvas.width * 0.24;
+            runnerTargetX = Math.max(45, Math.min(arcadeCanvas.width - 45, runnerTargetX + dir * step));
+        }
+
+        function loopGame2Runner() {
+            if (!arcadeRunning || currentArcadeGame !== 2) return;
+            actx.clearRect(0, 0, arcadeCanvas.width, arcadeCanvas.height);
+
+            // Speed scales up as time progresses!
+            const elapsed = 35 - arcadeTimeLeft;
+            const speedMult = 1 + elapsed * 0.045 + (runnerInvincibleTimer > 0 ? 0.5 : 0);
+
+            // Draw scrolling track background
+            actx.fillStyle = '#1e1b4b';
+            actx.fillRect(0, 0, arcadeCanvas.width, arcadeCanvas.height);
+
+            roadLinesY = (roadLinesY + 6 * speedMult) % 60;
+            actx.strokeStyle = 'rgba(255,255,255,0.2)';
+            actx.lineWidth = 4;
+            for (let lx = arcadeCanvas.width * 0.25; lx < arcadeCanvas.width; lx += arcadeCanvas.width * 0.25) {
+                for (let ly = -60 + roadLinesY; ly < arcadeCanvas.height; ly += 60) {
+                    actx.beginPath();
+                    actx.moveTo(lx, ly);
+                    actx.lineTo(lx, ly + 32);
+                    actx.stroke();
+                }
+            }
+
+            // Smooth player movement
+            runnerX += (runnerTargetX - runnerX) * 0.22;
+            const playerY = arcadeCanvas.height - 58;
+
+            if (runnerInvincibleTimer > 0) {
+                runnerInvincibleTimer--;
+                actx.fillStyle = 'rgba(255, 209, 102, 0.35)';
+                actx.beginPath();
+                actx.arc(runnerX, playerY - 6, 40, 0, Math.PI * 2);
+                actx.fill();
+            }
+
+            // Draw Running Mascot
+            actx.font = '46px Jua';
+            actx.textAlign = 'center';
+            actx.fillText(runnerInvincibleTimer > 0 ? '🦸' : '🐰', runnerX, playerY + 10);
+
+            // Spawn Hazards & Hearts
+            if (Math.random() < 0.075 * speedMult) {
+                const rand = Math.random();
+                let kind = 'heart';
+                let emoji = '💖';
+                if (rand < 0.48) {
+                    kind = 'hazard';
+                    const hazards = ['🔥', '⚡', '💣'];
+                    emoji = hazards[Math.floor(Math.random() * hazards.length)];
+                } else if (rand < 0.56) {
+                    kind = 'star';
+                    emoji = '🌟';
+                } else {
+                    const goods = ['💖', '🍎', '🌷'];
+                    emoji = goods[Math.floor(Math.random() * goods.length)];
+                }
+                runnerItems.push({
+                    x: 45 + Math.random() * (arcadeCanvas.width - 90),
+                    y: -30,
+                    vy: (3.8 + Math.random() * 2.5) * speedMult,
+                    kind,
+                    emoji
+                });
+            }
+
+            // Update & Draw Items
+            for (let i = runnerItems.length - 1; i >= 0; i--) {
+                const it = runnerItems[i];
+                it.y += it.vy;
+
+                actx.font = '38px Jua';
+                actx.textAlign = 'center';
+                actx.fillText(it.emoji, it.x, it.y);
+
+                const dist = Math.hypot(it.x - runnerX, it.y - playerY);
+                if (dist < 42) {
+                    if (it.kind === 'hazard') {
+                        if (runnerInvincibleTimer > 0) {
+                            // Smash hazard while invincible!
+                            arcadeScore += 30;
+                            arcadeCombo++;
+                            playSound('whack', arcadeCombo);
+                            spawnBurst(it.x, it.y, '#FFD166', 16);
+                            spawnFloatingText(it.x, it.y, '무적 격파! +30', '#FFD166');
+                        } else {
+                            arcadeHP--;
+                            arcadeCombo = 0;
+                            playSound('boom');
+                            shakeArcadeCabinet();
+                            spawnBurst(it.x, it.y, '#EF4444', 18);
+                            spawnFloatingText(it.x, it.y, '앗 뜨거! 💔', '#FF4D6D');
+                            if (arcadeHP <= 0) {
+                                updateHUD();
+                                finishArcadeGame('hp0');
+                                return;
+                            }
+                        }
+                    } else if (it.kind === 'star') {
+                        runnerInvincibleTimer = 220; // ~3.6 seconds invincible dash
+                        arcadeScore += 50;
+                        arcadeCombo += 2;
+                        playSound('powerup');
+                        spawnBurst(it.x, it.y, '#06D6A0', 20);
+                        spawnFloatingText(it.x, it.y, '🌟무적 질주!! +50', '#06D6A0');
+                    } else {
+                        arcadeCombo++;
+                        const pts = feverMode ? 40 : 20;
+                        arcadeScore += pts;
+                        playSound('whack', arcadeCombo);
+                        spawnBurst(it.x, it.y, '#FF85A1', 12);
+                        spawnFloatingText(it.x, it.y, `+${pts}💖`, '#FF85A1');
+                    }
+                    updateHUD();
+                    runnerItems.splice(i, 1);
+                    continue;
+                }
+
+                if (it.y > arcadeCanvas.height + 40) {
+                    runnerItems.splice(i, 1);
+                }
+            }
+
+            drawFX();
+            arcadeAnimId = requestAnimationFrame(loopGame2Runner);
+        }
+
+        /* --------------------------------------------------
+           GAME 3: 🎯 팡팡! 먹구름 슈팅 디펜스 (Storm Cloud Defense)
+        -------------------------------------------------- */
+        let defenseClouds = [];
+        let defenseBeams = [];
+        let bombSkillUses = 2;
+        let freezeSkillUses = 2;
+        let freezeTimer = 0;
+
+        function startGame3Defense() {
+            resizeArcadeCanvas();
+            defenseClouds = [];
+            defenseBeams = [];
+            floatingTexts = [];
+            burstParticles = [];
+            bombSkillUses = 2;
+            freezeSkillUses = 2;
+            freezeTimer = 0;
+            document.getElementById('bomb-count-badge').textContent = `${bombSkillUses}회`;
+            document.getElementById('freeze-count-badge').textContent = `${freezeSkillUses}회`;
+            loopGame3Defense();
+        }
+
+        function useDefenseBombSkill() {
+            if (!arcadeRunning || currentArcadeGame !== 3 || bombSkillUses <= 0) return;
+            bombSkillUses--;
+            document.getElementById('bomb-count-badge').textContent = `${bombSkillUses}회`;
+            playSound('powerup');
+            shakeArcadeCabinet();
+
+            defenseClouds.forEach(c => {
+                arcadeScore += 25;
+                spawnBurst(c.x, c.y, '#FFD166', 14);
+                spawnFloatingText(c.x, c.y, '🌈사과폭탄! +25', '#FFD166');
+            });
+            defenseClouds = [];
+            updateHUD();
+        }
+
+        function useDefenseFreezeSkill() {
+            if (!arcadeRunning || currentArcadeGame !== 3 || freezeSkillUses <= 0) return;
+            freezeSkillUses--;
+            document.getElementById('freeze-count-badge').textContent = `${freezeSkillUses}회`;
+            freezeTimer = 210; // ~3.5 seconds freeze
+            playSound('powerup');
+            spawnFloatingText(arcadeCanvas.width / 2, arcadeCanvas.height / 2, '❄️ 잠깐만! 마음 멈춤 시계 발동!!', '#38BDF8');
+        }
+
+        function loopGame3Defense() {
+            if (!arcadeRunning || currentArcadeGame !== 3) return;
+            actx.clearRect(0, 0, arcadeCanvas.width, arcadeCanvas.height);
+
+            // Sky & Classroom Roof Defense Line
+            const grad = actx.createLinearGradient(0, 0, 0, arcadeCanvas.height);
+            grad.addColorStop(0, freezeTimer > 0 ? '#0c4a6e' : '#1e1b4b');
+            grad.addColorStop(1, '#312e81');
+            actx.fillStyle = grad;
+            actx.fillRect(0, 0, arcadeCanvas.width, arcadeCanvas.height);
+
+            const defenseY = arcadeCanvas.height - 46;
+            actx.fillStyle = '#10B981';
+            actx.fillRect(0, defenseY, arcadeCanvas.width, 46);
+            actx.fillStyle = '#FFF';
+            actx.font = '18px Jua';
+            actx.textAlign = 'center';
+            actx.fillText('🏫 행복한 우리 반 교실 방어선 (먹구름을 터치해서 물리치세요!)', arcadeCanvas.width / 2, defenseY + 28);
+
+            // Center Heart Cannon
+            actx.font = '38px Jua';
+            actx.fillText('💖', arcadeCanvas.width / 2, defenseY - 6);
+
+            if (freezeTimer > 0) freezeTimer--;
+
+            // Spawn Storm Clouds
+            if (Math.random() < 0.045) {
+                const isTank = Math.random() < 0.28;
+                const badLabels = ['미워!😠', '내거야!😤', '비켜!💢', '싫어!⚡', '메롱!😜'];
+                defenseClouds.push({
+                    x: 55 + Math.random() * (arcadeCanvas.width - 110),
+                    y: -35,
+                    vy: isTank ? 0.85 : 1.45 + Math.random() * 0.9,
+                    hp: isTank ? 3 : 1,
+                    maxHp: isTank ? 3 : 1,
+                    r: isTank ? 44 : 34,
+                    label: isTank ? '대왕고집구름👾' : badLabels[Math.floor(Math.random() * badLabels.length)]
+                });
+            }
+
+            // Draw Laser Beams
+            for (let i = defenseBeams.length - 1; i >= 0; i--) {
+                const b = defenseBeams[i];
+                b.life--;
+                actx.strokeStyle = '#FF4D6D';
+                actx.lineWidth = 6;
+                actx.beginPath();
+                actx.moveTo(arcadeCanvas.width / 2, defenseY - 12);
+                actx.lineTo(b.tx, b.ty);
+                actx.stroke();
+                if (b.life <= 0) defenseBeams.splice(i, 1);
+            }
+
+            // Update & Draw Storm Clouds
+            for (let i = defenseClouds.length - 1; i >= 0; i--) {
+                const c = defenseClouds[i];
+                if (freezeTimer <= 0) {
+                    c.y += c.vy;
+                }
+
+                actx.save();
+                actx.translate(c.x, c.y);
+                actx.fillStyle = freezeTimer > 0 ? '#38BDF8' : (c.maxHp > 1 ? '#581C87' : '#374151');
+                actx.beginPath();
+                actx.arc(0, 0, c.r, 0, Math.PI * 2);
+                actx.fill();
+                actx.lineWidth = 3.5;
+                actx.strokeStyle = '#FDE047';
+                actx.stroke();
+
+                actx.fillStyle = '#FFF';
+                actx.font = '16px Jua';
+                actx.textAlign = 'center';
+                actx.fillText(c.label, 0, 4);
+                if (c.maxHp > 1) {
+                    actx.fillStyle = '#FDE047';
+                    actx.font = '13px Jua';
+                    actx.fillText(`HP ${c.hp}/${c.maxHp}`, 0, 22);
+                }
+                actx.restore();
+
+                // Reached Classroom?
+                if (c.y + c.r >= defenseY) {
+                    arcadeHP--;
+                    arcadeCombo = 0;
+                    playSound('boom');
+                    shakeArcadeCabinet();
+                    spawnBurst(c.x, defenseY, '#EF4444', 16);
+                    defenseClouds.splice(i, 1);
+                    updateHUD();
+                    if (arcadeHP <= 0) {
+                        finishArcadeGame('hp0');
+                        return;
+                    }
+                }
+            }
+
+            drawFX();
+            arcadeAnimId = requestAnimationFrame(loopGame3Defense);
+        }
+
+        // Pointer Listener for Game 2 (Drag Runner) & Game 3 (Tap Shoot Cloud)
+        arcadeCanvas.addEventListener('pointerdown', (e) => {
+            if (!arcadeRunning) return;
+            const rect = arcadeCanvas.getBoundingClientRect();
+            const px = (e.clientX - rect.left) * (arcadeCanvas.width / rect.width);
+            const py = (e.clientY - rect.top) * (arcadeCanvas.height / rect.height);
+
+            if (currentArcadeGame === 2) {
+                runnerTargetX = Math.max(45, Math.min(arcadeCanvas.width - 45, px));
+            } else if (currentArcadeGame === 3) {
+                playSound('laser');
+                defenseBeams.push({ tx: px, ty: py, life: 6 });
+
+                // Check cloud hit
+                for (let i = defenseClouds.length - 1; i >= 0; i--) {
+                    const c = defenseClouds[i];
+                    if (Math.hypot(px - c.x, py - c.y) <= c.r + 24) {
+                        c.hp--;
+                        spawnBurst(c.x, c.y, '#FF85A1', 10);
+                        if (c.hp <= 0) {
+                            arcadeCombo++;
+                            const pts = (c.maxHp > 1 ? 50 : 20) * (feverMode ? 2 : 1);
+                            arcadeScore += pts;
+                            playSound('whack', arcadeCombo);
+                            spawnFloatingText(c.x, c.y, `고마워!💖 +${pts}`, '#FFD166');
+                            defenseClouds.splice(i, 1);
+                        } else {
+                            spawnFloatingText(c.x, c.y, '팡!💥', '#FFF');
+                        }
+                        updateHUD();
+                        break;
+                    }
+                }
+            }
+        });
+
+        arcadeCanvas.addEventListener('pointermove', (e) => {
+            if (!arcadeRunning || currentArcadeGame !== 2) return;
+            const rect = arcadeCanvas.getBoundingClientRect();
+            const px = (e.clientX - rect.left) * (arcadeCanvas.width / rect.width);
+            runnerTargetX = Math.max(45, Math.min(arcadeCanvas.width - 45, px));
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (!arcadeRunning || currentArcadeGame !== 2) return;
+            if (e.key === 'ArrowLeft') moveRunnerLane(-1);
+            if (e.key === 'ArrowRight') moveRunnerLane(1);
+        });
+
+        /* --------------------------------------------------
+           8. PROMISE PLEDGE STUDIO
+        -------------------------------------------------- */
+        let selectedSpecies = 'bunny';
+        let selectedTitle = '배려 토끼 루루 어린이';
+        let selectedPromise = '친구에게 별명 대신 예쁜 이름을 다정하게 불러줄게요!';
+
+        function selectAvatar(species, title) {
+            playSound('click');
+            selectedSpecies = species;
+            selectedTitle = title + ' 어린이';
+            updatePledgePreview();
+        }
+
+        function selectPromise(text) {
+            playSound('click');
+            selectedPromise = text;
+            updatePledgePreview();
+            speakText(text);
+        }
+
+        function updatePledgePreview() {
+            const nameVal = document.getElementById('pledge-name').value.trim();
+            document.getElementById('cert-avatar-svg').innerHTML = createCharacterSVG(selectedSpecies, 'happy');
+            document.getElementById('cert-title').textContent = selectedTitle;
+            document.getElementById('cert-name').textContent = nameVal || '1학년 멋진 친구';
+            document.getElementById('cert-promise').textContent = `"${selectedPromise}"`;
+            document.getElementById('cert-keys').textContent = `🗝️ ${getKeyCount()}/8`;
+            document.getElementById('cert-score').textContent = `${bestArcadeScore}점`;
+        }
+
+        function celebratePledge() {
+            playSound('success');
+            launchConfetti();
+            const card = document.getElementById('certificate-card');
+            card.classList.remove('animate-pop');
+            void card.offsetWidth;
+            card.classList.add('animate-pop');
+            const name = document.getElementById('cert-name').textContent;
+            speakText(`${name}, 우리 마음을 잇는 약속 도장 쾅! 앞으로도 친구들과 배려하며 행복하게 지내요!`);
+        }
+
+        // Initialize on Window Load
+        window.onload = function () {
+            document.getElementById('home-mascot-1').innerHTML = createCharacterSVG('bunny', 'happy');
+            document.getElementById('home-mascot-2').innerHTML = createCharacterSVG('bear', 'happy');
+            renderAllProgress();
+            updateGameLocksUI();
+            updatePledgePreview();
+        };
+    </script>
+</body>
+</html>
